@@ -93,7 +93,8 @@ function init() {
     raycaster=new THREE.Raycaster()
     
     gui=new GUI()
-    addGui()
+    //addGui()
+    
     
 
     enableOrbitControls()
