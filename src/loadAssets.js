@@ -123,3 +123,15 @@ export function ParedPuertaSimple(scene) {
 export function PuertaModel1(scene) {
     cargar(__dirModels+'PuertaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
 }
+export function ParedConVentanaYPuerta(scene) {
+    cargar(__dirModels+'ParedConVentanaYPuerta.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+}
+export function TorretaPortal(scene) {
+    cargar(__dirModels+'TorretaPortal.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+}
+export function CuboDeCompania(scene) {
+    cargar(__dirModels+'CuboDeCompañia.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+}
+export function PlantaModel1(scene) {
+    cargar(__dirModels+'PlantaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+}

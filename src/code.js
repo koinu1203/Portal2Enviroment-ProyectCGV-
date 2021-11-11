@@ -45,6 +45,7 @@ let light2 //Rectangular Light
 let light3 //pointer light
 let light4 //Another Rectangular Light
 let light5 //directional light
+let lightHelper //light helper
 
 //Some objets
 let object
@@ -64,13 +65,13 @@ function init() {
     scene.background = new THREE.Color(0x2a3b4c)
 
     camera = new THREE.PerspectiveCamera(
-        75,
+        90,
         window.innerWidth/window.innerHeight,
         5.0,
         3000
     )
-    camera.position.z = 150
-    camera.position.y = 100
+    camera.position.z =0
+    camera.position.y = 300
 
     renderer = new THREE.WebGLRenderer({antialias:true})
     renderer.setPixelRatio(window.devicePixelRatio)
@@ -93,10 +94,8 @@ function init() {
     raycaster=new THREE.Raycaster()
     
     gui=new GUI()
-    //addGui()
+    addGui()
     
-    
-
     enableOrbitControls()
     
     skybox_Background()
@@ -104,34 +103,42 @@ function init() {
 }
 
 function display() {
-    
+    let xpos,ypos,zpos
+    xpos=100
+    ypos=0
+    zpos=-100
 
+    /*xpos=0
+    ypos=0
+    zpos=0*/
     //PAREDES
-    loadParedes(0,2,0)
+    loadParedes(xpos+0,ypos+2,zpos+0)
     
+    //VENTANAS
+    loadVentana(xpos+0,ypos,zpos)
 
     //PISO
-    loadPiso(0,0,0)
+    loadPiso(xpos+0,ypos+0,zpos+0)
 
     //SILLAS 
-    loadSillas(15,0,-20)
+    loadSillas(xpos+15,ypos+0,zpos+-20)
 
     //MESA
-    loadMesa(15,0,-20)
+    loadMesa(xpos+15,ypos+0,zpos+-20)
 
     //PROYECTOR
-    loadProyector(-10,40,-20)
+    loadProyector(xpos+-10,ypos+40,zpos+-20)
 
     //CIENTIFICOS
-    loadCientificos(0,0,0)
-    loadCientificoSentado(0,0,0)
+    loadCientificos(xpos+0,ypos+0,zpos+0)
+    loadCientificoSentado(xpos+0,ypos+0,zpos+0)
 
     //PIZARRA & VIDEO
-    loadPizarra(0,0,0)
-    loadVideo(-93,30,-19.5,3.2)
+    loadPizarra(xpos+0,ypos+0,zpos+0)
+    loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
 
     //LUCES
-    createLight() 
+    createLight(xpos+0,ypos+0,zpos+0) 
     
     //LOOP DE RENDERIZADO
 
@@ -139,6 +146,16 @@ function display() {
     //enableDragControls()
 
     animate()
+}
+function loadVentana(coordx,coordy,coordz) {
+    const vidrioMaterial=new THREE.MeshBasicMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
+    const rectangulo=new THREE.BoxGeometry(144,30,4)
+    const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
+    ventana.geometry.scale(1,1.2,1)
+    ventana.position.set(coordx+21,coordy+46.5,coordz+142)
+    scene.add(ventana)
+
+    
 }
 function loadParedes(coordx,coordy,coordz) {
     loadAssets.clearall()
@@ -164,7 +181,13 @@ function loadParedes(coordx,coordy,coordz) {
 
     loadAssets.setRotation(0,Math.PI*0.0,0)
     loadAssets.setCords(coordx+-90+4,coordy+0,coordz+102)
-    loadAssets.ParedPuertaDoble(scene) 
+    loadAssets.ParedPuertaDoble(scene)
+
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    loadAssets.setCords(coordx+2,coordy+0,coordz+130)
+    loadAssets.ParedConVentanaYPuerta(scene)
+
+    
 
     loadAssets.setResize(1.0,1.2,0.89)
     loadAssets.setRotation(0,Math.PI*0.0,0)
@@ -176,6 +199,7 @@ function loadParedes(coordx,coordy,coordz) {
     loadAssets.setCords(coordx+-89+4,coordy+0,coordz+249)
     loadAssets.ParedSimple(scene) 
 
+    
 
 }
 function loadPiso(coordx,coordy,coordz) {
@@ -351,21 +375,25 @@ function loadPizarra(coordx,coordy,coordz) {
     loadAssets.setRotation(0,Math.PI*0.5,0)
     loadAssets.PizarraDigital(scene)    
 }
-function createLight(){
-    light=new THREE.AmbientLight(0xffffff,1.5)
+function createLight(coordx,coordy,coordz){
+
+    //light 1
+    light=new THREE.AmbientLight(0xffffff,0.5)
     scene.add(light)
 
+    //light 2
     const width=55.0;
     const height=30.0;
     light2=new THREE.RectAreaLight(0xfcfbda ,0.5,width,height)
-    light2.position.set(-90,30,-19)
-    light2.lookAt(-1000,20,0)
+    light2.position.set(coordx+-90,coordy+30,coordz+-19)
+    light2.lookAt(coordx+-1000,coordy+20,coordz+0)
     scene.add(light2)
 
-    const distance = 100.0
-    const angle= Math.PI *0.1
-    const penumbra=1.5
-    const decay=0.5 
+    //light 3
+    const distance = 80.0
+    const angle= Math.PI *0.10
+    const penumbra=1.0
+    const decay=0.0 
     light3=new THREE.SpotLight(
         0xfefdec , 
         0.2,
@@ -374,29 +402,37 @@ function createLight(){
         penumbra,
         decay
     )
-    light3.position.set(-10,40,-26)
-    light3.target.position.set(-95,30,-19)
-
-    
+    light3.position.set(coordx+-19.5,coordy+46.5,coordz+-26)
+    light3.target.position.set(coordx+-95,coordy+30,coordz+-20)
     scene.add(light3)
     scene.add(light3.target)
-
-    light4 = new THREE.RectAreaLight(0xfcfbda,2.0,7,5)
-    light4.position.set(-21,45,-27)
-    light4.lookAt(1000,30,-19)
-    scene.add(light4)
-
-    light5=new THREE.DirectionalLight(0Xffffff,0.3)
-    light5.position.set(100,100,-100)
-    light5.castShadow=true
-    scene.add(light5)
     
+    //light 4
+    light4 = new THREE.RectAreaLight(0xfcfbda,2.0,7,5)
+    light4.position.set(coordx+-21,coordy+45,coordz+-27)
+    light4.lookAt(coordx+1000,coordy+30,coordz+-19)
+    scene.add(light4)
+    
+    //light 5
+    light5=new THREE.DirectionalLight(0Xffffff,0.3)
+    light5.position.set(coordx+100,coordy+100,coordz+-50)
+
     light5.castShadow=true
-    light5.shadow.camera.near=1000
-    light5.shadow.camera.far=4000
+    light5.shadow.camera.near=20
+    light5.shadow.camera.far=1000
     light5.shadow.mapSize.width=1024
     light5.shadow.mapSize.height=1024
 
+    light5.shadow.camera.left=-50
+    light5.shadow.camera.right=50
+    light5.shadow.camera.top=50
+    light5.shadow.camera.bottom=-50
+    scene.add(light5)
+    
+    //lightHelper=new THREE.SpotLightHelper(light3)
+    //lightHelper=new THREE.DirectionalLightHelper(light5)
+    
+    //scene.add(lightHelper) 
     
 }
 function skybox_Background() {
@@ -449,6 +485,7 @@ function animate(){
     requestAnimationFrame(animate)
     update()
     stats.update()
+    //lightHelper.update()
     renderer.render(scene, camera)
 }
 
@@ -456,7 +493,7 @@ function enableOrbitControls(){
     orbitcontrols = new OrbitControls(camera,renderer.domElement) 
     orbitcontrols.maxPolarAngle=Math.PI*0.45
     orbitcontrols.maxDistance=500
-    orbitcontrols.enablePan=false
+    //orbitcontrols.enablePan=false
 }
 function enableDragControls() {
     drangControls=new DragControls(loadAssets.objects,camera,renderer.domElement)
