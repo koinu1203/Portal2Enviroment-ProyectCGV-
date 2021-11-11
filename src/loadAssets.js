@@ -29,7 +29,6 @@ manager.onLoad = function ( ) {
 }
 manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
 	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' )
-    console.log('location: '+x+' '+y+ ' '+z+'\nrotation: '+rx+' '+ry+ ' '+rz+'\nsize: '+sx+' '+sy+ ' '+sz)
     if(itemsLoaded%2==0){
         clearall()
     }
@@ -69,14 +68,26 @@ export function setResize(psx,psy,psz){
 function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz){
     const loader = new GLTFLoader(manager)
     loader.load(ruta, (gltf)=>{
-        const model = gltf.scene
-        model.position.set(px,py,pz)
-        model.rotation.set(prx,pry,prz)
-        model.scale.set(psx,psy,psz)
-        model.castShadow=true
-        model.reciveShadow=true
-        scene.add(model)
-        objects.push(model)
+        gltf.scene.traverse(function (child) {
+            if(child.isMesh){
+                child.castShadow=true
+                child.reciveShadow=true
+                console.log("Se aplico shadows")
+            }
+        })
+        const box=new THREE.Box3().setFromObject(gltf.scene)
+        const center=box.getCenter(new THREE.Vector3())
+        gltf.scene.position.x += (gltf.scene.position.x-center.x)
+        gltf.scene.position.y += (gltf.scene.position.y-center.y)
+        gltf.scene.position.z += (gltf.scene.position.z-center.z)
+
+        gltf.scene.position.set(px,py,pz)
+        gltf.scene.rotation.set(prx,pry,prz)
+        gltf.scene.scale.set(psx,psy,psz)
+        scene.add(gltf.scene)
+        objects.push(gltf.scene)
+    },undefined,function (e) {
+        console.error(e)
     })
 }
 

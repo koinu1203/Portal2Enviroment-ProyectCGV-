@@ -46,6 +46,7 @@ let light3 //pointer light
 let light4 //Another Rectangular Light
 let light5 //directional light
 let lightHelper //light helper
+let camerShadowHelper
 
 //Some objets
 let object
@@ -76,10 +77,10 @@ function init() {
     renderer = new THREE.WebGLRenderer({antialias:true})
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
-    document.body.appendChild(renderer.domElement)
     renderer.shadowMap.enable=true
-    renderer.shadowMap.type=THREE.PCFShadowMap
-
+    renderer.shadowMap.type=THREE.PCFSoftShadowMap
+    document.body.appendChild(renderer.domElement)
+    
     window.addEventListener('resize', canvasResize)
     window.addEventListener('click',onclick)
     
@@ -108,6 +109,7 @@ function display() {
     ypos=0
     zpos=-100
 
+    createLight(xpos+0,ypos+0,zpos+0) 
     /*xpos=0
     ypos=0
     zpos=0*/
@@ -138,7 +140,7 @@ function display() {
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
 
     //LUCES
-    createLight(xpos+0,ypos+0,zpos+0) 
+    
     
     //LOOP DE RENDERIZADO
 
@@ -153,6 +155,7 @@ function loadVentana(coordx,coordy,coordz) {
     const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
     ventana.geometry.scale(1,1.2,1)
     ventana.position.set(coordx+21,coordy+46.5,coordz+142)
+    ventana.receiveShadow=true
     scene.add(ventana)
 
     
@@ -203,22 +206,35 @@ function loadParedes(coordx,coordy,coordz) {
 
 }
 function loadPiso(coordx,coordy,coordz) {
-    loadAssets.clearall()
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/piso.png')
+    const boxPiso=new THREE.PlaneGeometry(400,400,32,32)
+    const texturePiso=new THREE.MeshToonMaterial({side:THREE.DoubleSide})
+    texturePiso.map=pisoTextureLoader
+    const piso= new THREE.Mesh(boxPiso,texturePiso)
+    piso.position.set(0,1.9,0)
+    piso.rotation.set(Math.PI*0.5,0,0)
+    piso.castShadow=false
+    piso.receiveShadow=true
+    console.log(piso)
+    scene.add(piso)
 
-    loadAssets.setCords(coordx,coordy,coordz)
-    loadAssets.piso(scene)
 
-    //loadAssets.setRotation(0,Math.PI*1.0,0)
-    loadAssets.setCords(coordx+-200,coordy+0,coordz+0)
-    loadAssets.piso(scene)
+    // loadAssets.clearall()
 
-    //loadAssets.setRotation(0,Math.PI*0.5,0)
-    loadAssets.setCords(coordx+-200,coordy+0,coordz+200)
-    loadAssets.piso(scene)
+    // loadAssets.setCords(coordx,coordy,coordz)
+    // loadAssets.piso(scene)
 
-    //loadAssets.setRotation(0,Math.PI*0.5,0)
-    loadAssets.setCords(coordx+0,coordy+0,coordz+200)
-    loadAssets.piso(scene)
+    // //loadAssets.setRotation(0,Math.PI*1.0,0)
+    // loadAssets.setCords(coordx+-200,coordy+0,coordz+0)
+    // loadAssets.piso(scene)
+
+    // //loadAssets.setRotation(0,Math.PI*0.5,0)
+    // loadAssets.setCords(coordx+-200,coordy+0,coordz+200)
+    // loadAssets.piso(scene)
+
+    // //loadAssets.setRotation(0,Math.PI*0.5,0)
+    // loadAssets.setCords(coordx+0,coordy+0,coordz+200)
+    // loadAssets.piso(scene)
 }
 function loadVideo(coordx,coordy,coordz,psize) {
     video=document.getElementById('VideoPresentation')
@@ -378,32 +394,34 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    light=new THREE.AmbientLight(0xffffff,0.5)
+    /*light=new THREE.AmbientLight(0xffffff,0.0)
     scene.add(light)
 
     //light 2
     const width=55.0;
     const height=30.0;
-    light2=new THREE.RectAreaLight(0xfcfbda ,0.5,width,height)
+    light2=new THREE.RectAreaLight(0xfcfbda ,0.3,width,height)
     light2.position.set(coordx+-90,coordy+30,coordz+-19)
     light2.lookAt(coordx+-1000,coordy+20,coordz+0)
     scene.add(light2)
 
     //light 3
-    const distance = 80.0
-    const angle= Math.PI *0.10
-    const penumbra=1.0
+    const distance = 10.0
+    const angle= Math.PI *0.13
+    const penumbra=0.0
     const decay=0.0 
     light3=new THREE.SpotLight(
-        0xfefdec , 
+        0xfefdec,
         0.2,
         distance,
         angle,
         penumbra,
         decay
     )
-    light3.position.set(coordx+-19.5,coordy+46.5,coordz+-26)
+    light3.position.set(coordx+-40,coordy+30,coordz+-20)
     light3.target.position.set(coordx+-95,coordy+30,coordz+-20)
+    //light3.target.position.set(coordx+95,coordy+30,coordz+-120)
+
     scene.add(light3)
     scene.add(light3.target)
     
@@ -411,29 +429,31 @@ function createLight(coordx,coordy,coordz){
     light4 = new THREE.RectAreaLight(0xfcfbda,2.0,7,5)
     light4.position.set(coordx+-21,coordy+45,coordz+-27)
     light4.lookAt(coordx+1000,coordy+30,coordz+-19)
-    scene.add(light4)
+    scene.add(light4)*/
     
     //light 5
-    light5=new THREE.DirectionalLight(0Xffffff,0.3)
-    light5.position.set(coordx+100,coordy+100,coordz+-50)
+    light5=new THREE.SpotLight()
+    light5.position.set(coordx+50,coordy+30,coordz+100)
+    light5.target.position.set(0,0,100)
 
     light5.castShadow=true
-    light5.shadow.camera.near=20
-    light5.shadow.camera.far=1000
     light5.shadow.mapSize.width=1024
     light5.shadow.mapSize.height=1024
-
-    light5.shadow.camera.left=-50
-    light5.shadow.camera.right=50
-    light5.shadow.camera.top=50
-    light5.shadow.camera.bottom=-50
+    light5.shadow.camera.near=50
+    light5.shadow.camera.far=500
+    light5.shadow.bias=-0.0001
+    light5.shadow.camera.left=-500
+    light5.shadow.camera.right=500
+    
+    console.log(light5)
     scene.add(light5)
-    
+    scene.add(light5.target)
     //lightHelper=new THREE.SpotLightHelper(light3)
-    //lightHelper=new THREE.DirectionalLightHelper(light5)
+    lightHelper=new THREE.SpotLightHelper(light5)
     
-    //scene.add(lightHelper) 
-    
+    scene.add(lightHelper) 
+    camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
+    scene.add(camerShadowHelper)
 }
 function skybox_Background() {
     const __dirSkyBox='/assets/img/'
@@ -485,7 +505,8 @@ function animate(){
     requestAnimationFrame(animate)
     update()
     stats.update()
-    //lightHelper.update()
+    lightHelper.update()
+    camerShadowHelper.update()
     renderer.render(scene, camera)
 }
 
