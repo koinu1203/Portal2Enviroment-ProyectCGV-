@@ -1,4 +1,5 @@
 import * as THREE from "../modules/three.module.js"
+//import * as THREEx from "../modules/threex.keyboardstate.js"
 import { OrbitControls } from "../controls/OrbitControls.js"
 import * as loadAssets from "./loadAssets.js"
 import { DragControls } from "../controls/DragControls.js" 
@@ -6,9 +7,7 @@ import { GUI } from "../modules/dat.gui.module.js"
 import Stats from "../modules/stats.module.js"
 
 //Graphics variables 
-let container
 let camera
-let backgroundTexture
 let scene 
 let renderer 
 let skybox
@@ -48,15 +47,12 @@ let light5 //directional light
 let lightHelper //light helper
 let camerShadowHelper
 
-//Some objets
-let object
-
 //video objects
 let video
 let vidTex
 let status 
 
-//Stats
+//Stats (FPS/MS)
 let stats
 
 
@@ -71,20 +67,19 @@ function init() {
         5.0,
         3000
     )
-    camera.position.z =0
-    camera.position.y = 300
+    camera.position.set(50,40,+150)
+    camera.lookAt(0,0,0)
 
     renderer = new THREE.WebGLRenderer({antialias:true})
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.shadowMap.enable=true
-    renderer.shadowMap.type=THREE.PCFSoftShadowMap
+    renderer.shadowMap.enabled=true
+    //renderer.shadowMap.type=THREE.PCFSoftShadowMap
     document.body.appendChild(renderer.domElement)
     
     window.addEventListener('resize', canvasResize)
     window.addEventListener('click',onclick)
-    
-    keyboard = new THREEx.KeyboardState() 
+    keyboard = new THREEx.KeyboardState()
     status=false
     
     stats=Stats()
@@ -97,9 +92,9 @@ function init() {
     gui=new GUI()
     addGui()
     
+
     enableOrbitControls()
     
-    skybox_Background()
     display()
 }
 
@@ -108,11 +103,19 @@ function display() {
     xpos=100
     ypos=0
     zpos=-100
-
-    createLight(xpos+0,ypos+0,zpos+0) 
     /*xpos=0
     ypos=0
     zpos=0*/
+    //Skybox / fondo
+    skybox_Background()
+
+    //LUCES
+    createLight(xpos+0,ypos+0,zpos+0) 
+
+    
+    //PISO 
+    loadPiso(xpos+0,ypos+0,zpos+0)
+
     //PAREDES
     loadParedes(xpos+0,ypos+2,zpos+0)
     
@@ -138,23 +141,28 @@ function display() {
     //PIZARRA & VIDEO
     loadPizarra(xpos+0,ypos+0,zpos+0)
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
-
-    //LUCES
     
-    
-    //LOOP DE RENDERIZADO
-
     //controles para mover objetos (Deshabilitar Orbit Controls )
     //enableDragControls()
 
+    //LOOP DE RENDERIZADO
     animate()
 }
+function cuboPrueba() {
+    const material=new THREE.MeshPhongMaterial({color: 0xa4e7ff})
+    const cubo=new THREE.BoxGeometry(1,1,1)
+    const cuboObjeto=new THREE.Mesh(cubo,material)
+    cuboObjeto.position.set(0,10,0)
+    cuboObjeto.receiveShadow=true;
+    cuboObjeto.castShadow=true;
+    scene.add(cuboObjeto)
+}
 function loadVentana(coordx,coordy,coordz) {
-    const vidrioMaterial=new THREE.MeshBasicMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
+    const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
     const rectangulo=new THREE.BoxGeometry(144,30,4)
     const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
-    ventana.geometry.scale(1,1.2,1)
-    ventana.position.set(coordx+21,coordy+46.5,coordz+142)
+    ventana.geometry.scale(1,1.15,1)
+    ventana.position.set(coordx+21,coordy+44.5,coordz+142)
     ventana.receiveShadow=true
     scene.add(ventana)
 
@@ -176,6 +184,10 @@ function loadParedes(coordx,coordy,coordz) {
     loadAssets.setCords(coordx-112.5,coordy+0,coordz+69.5)
     loadAssets.PuertaModel1(scene)
 
+    loadAssets.setRotation(0,Math.PI*0.0,0)
+    loadAssets.setCords(coordx-71,coordy+0,coordz+132)
+    loadAssets.PuertaModel1(scene)
+
 
     //paredes
     loadAssets.setRotation(0,Math.PI*-0.5,0)
@@ -186,6 +198,7 @@ function loadParedes(coordx,coordy,coordz) {
     loadAssets.setCords(coordx+-90+4,coordy+0,coordz+102)
     loadAssets.ParedPuertaDoble(scene)
 
+    loadAssets.setResize(1,1.15,1)
     loadAssets.setRotation(0,Math.PI*0.5,0)
     loadAssets.setCords(coordx+2,coordy+0,coordz+130)
     loadAssets.ParedConVentanaYPuerta(scene)
@@ -206,18 +219,18 @@ function loadParedes(coordx,coordy,coordz) {
 
 }
 function loadPiso(coordx,coordy,coordz) {
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/piso.png')
-    const boxPiso=new THREE.PlaneGeometry(400,400,32,32)
-    const texturePiso=new THREE.MeshToonMaterial({side:THREE.DoubleSide})
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/maderaModel1.png')
+    pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
+    pisoTextureLoader.repeat.set(3,3)
+    const boxPiso=new THREE.PlaneGeometry(400,400,400,400)
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xffffff, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(0,1.9,0)
     piso.rotation.set(Math.PI*0.5,0,0)
-    piso.castShadow=false
     piso.receiveShadow=true
     console.log(piso)
     scene.add(piso)
-
 
     // loadAssets.clearall()
 
@@ -394,9 +407,9 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    /*light=new THREE.AmbientLight(0xffffff,0.0)
+    light=new THREE.AmbientLight(0xffffff,0.7)
     scene.add(light)
-
+    
     //light 2
     const width=55.0;
     const height=30.0;
@@ -408,8 +421,8 @@ function createLight(coordx,coordy,coordz){
     //light 3
     const distance = 10.0
     const angle= Math.PI *0.13
-    const penumbra=0.0
-    const decay=0.0 
+    const penumbra=0.5
+    const decay=0.5 
     light3=new THREE.SpotLight(
         0xfefdec,
         0.2,
@@ -429,31 +442,15 @@ function createLight(coordx,coordy,coordz){
     light4 = new THREE.RectAreaLight(0xfcfbda,2.0,7,5)
     light4.position.set(coordx+-21,coordy+45,coordz+-27)
     light4.lookAt(coordx+1000,coordy+30,coordz+-19)
-    scene.add(light4)*/
+    scene.add(light4)
     
-    //light 5
-    light5=new THREE.SpotLight()
-    light5.position.set(coordx+50,coordy+30,coordz+100)
-    light5.target.position.set(0,0,100)
-
-    light5.castShadow=true
-    light5.shadow.mapSize.width=1024
-    light5.shadow.mapSize.height=1024
-    light5.shadow.camera.near=50
-    light5.shadow.camera.far=500
-    light5.shadow.bias=-0.0001
-    light5.shadow.camera.left=-500
-    light5.shadow.camera.right=500
     
-    console.log(light5)
-    scene.add(light5)
-    scene.add(light5.target)
     //lightHelper=new THREE.SpotLightHelper(light3)
-    lightHelper=new THREE.SpotLightHelper(light5)
+    // lightHelper=new THREE.SpotLightHelper(light3)
+    // scene.add(lightHelper) 
     
-    scene.add(lightHelper) 
-    camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
-    scene.add(camerShadowHelper)
+    // camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
+    // scene.add(camerShadowHelper)
 }
 function skybox_Background() {
     const __dirSkyBox='/assets/img/'
@@ -503,10 +500,10 @@ function skybox_Background() {
 }
 function animate(){
     requestAnimationFrame(animate)
-    update()
-    stats.update()
-    lightHelper.update()
-    camerShadowHelper.update()
+    //update()
+    //stats.update()
+    //lightHelper.update()
+    //camerShadowHelper.update()
     renderer.render(scene, camera)
 }
 

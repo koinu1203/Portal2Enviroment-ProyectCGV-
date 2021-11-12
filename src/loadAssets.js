@@ -72,6 +72,7 @@ function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz){
             if(child.isMesh){
                 child.castShadow=true
                 child.reciveShadow=true
+                child.geometry.computeVertexNormals()
                 console.log("Se aplico shadows")
             }
         })
