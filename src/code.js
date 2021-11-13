@@ -99,7 +99,6 @@ function init() {
     gui=new GUI()
     addGui()
     
-
     enableOrbitControls()
     
     display()
