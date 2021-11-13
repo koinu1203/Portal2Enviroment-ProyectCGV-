@@ -16,6 +16,9 @@ let sx=1.0,sy=1.0,sz=1.0
 //loader
 //let loader
 
+//Shadow
+let shadow=true
+
 //Objetos
 export let objects=[]
 
@@ -64,14 +67,21 @@ export function setResize(psx,psy,psz){
     sy=psy
     sz=psz
 }
+export function setResizeUnic(psr) {
+    sx=psr
+    sy=psr
+    sz=psr
+}
 
-function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz){
+function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz,shadow){
     const loader = new GLTFLoader(manager)
     loader.load(ruta, (gltf)=>{
         gltf.scene.traverse(function (child) {
             if(child.isMesh){
-                child.castShadow=true
-                child.reciveShadow=true
+                if(shadow==true){
+                    child.castShadow=true
+                }
+                child.receiveShadow=true
                 child.geometry.computeVertexNormals()
                 console.log("Se aplico shadows")
             }
@@ -94,56 +104,82 @@ function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz){
 
 
 export function paredes(scene){
-    cargar(__dirModels+'CentraBlock.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'CentraBlock.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function piso(scene){
-    cargar(__dirModels+'Piso.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'Piso.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function silla_oficina(scene){
-    cargar(__dirModels+'silla_oficina.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'silla_oficina.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function mesa_sola(scene) {
-    cargar(__dirModels+'MesaSola.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'MesaSola.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function mesa_con_fin(scene) {
-    cargar(__dirModels+'MesaconFin.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'MesaconFin.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function proyector(scene) {
-    cargar(__dirModels+'Proyector.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'Proyector.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function cientifico(scene) {
-    cargar(__dirModels+'cientifico.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'cientifico.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function cientificoSentado(scene) {
-    cargar(__dirModels+'cientificoSentado.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'cientificoSentado.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function PizarraDigital(scene) {
-    cargar(__dirModels+'PizarraDigital.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'PizarraDigital.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function ParedSimple(scene) {
-    cargar(__dirModels+'ParedSimple.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'ParedSimple.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function ParedPuertaDoble(scene) {
-    cargar(__dirModels+'ParedPuertaDoble.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'ParedPuertaDoble.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function ParedRecortada(scene) {
-    cargar(__dirModels+'ParedRecortada.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'ParedRecortada.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function ParedPuertaSimple(scene) {
-    cargar(__dirModels+'ParedPuertaSimple.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'ParedPuertaSimple.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function PuertaModel1(scene) {
-    cargar(__dirModels+'PuertaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'PuertaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function ParedConVentanaYPuerta(scene) {
-    cargar(__dirModels+'ParedConVentanaYPuerta.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    shadow=false
+    cargar(__dirModels+'ParedConVentanaYPuerta.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
 }
 export function TorretaPortal(scene) {
-    cargar(__dirModels+'TorretaPortal.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'TorretaPortal.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function CuboDeCompania(scene) {
-    cargar(__dirModels+'CuboDeCompañia.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'CuboDeCompañia.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function PlantaModel1(scene) {
-    cargar(__dirModels+'PlantaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz)
+    cargar(__dirModels+'PlantaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Cake(scene) {
+    cargar(__dirModels+'Cake.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Vela(scene) {
+    cargar(__dirModels+'Vela.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Laptop(scene) {
+    cargar(__dirModels+'Laptop.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Marco(scene) {
+    cargar(__dirModels+'Marco.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }

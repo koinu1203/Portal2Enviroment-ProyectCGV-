@@ -5,6 +5,8 @@ import * as loadAssets from "./loadAssets.js"
 import { DragControls } from "../controls/DragControls.js" 
 import { GUI } from "../modules/dat.gui.module.js"
 import Stats from "../modules/stats.module.js"
+import { RectAreaLightHelper } from "../Lights/RectAreaLightHelper.js"
+import {RectAreaLightUniformsLib} from "../Lights/RectAreaLightUniformsLib.js"
 
 //Graphics variables 
 let camera
@@ -43,7 +45,10 @@ let light //ambiente
 let light2 //Rectangular Light
 let light3 //pointer light
 let light4 //Another Rectangular Light
-let light5 //directional light
+let light5 //spot Light
+let light6 //point light
+let light7 //point light
+let light8 //point light
 let lightHelper //light helper
 let camerShadowHelper
 
@@ -67,14 +72,16 @@ function init() {
         5.0,
         3000
     )
-    camera.position.set(50,40,+150)
+    camera.position.set(200,100,-200)
     camera.lookAt(0,0,0)
 
     renderer = new THREE.WebGLRenderer({antialias:true})
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.shadowMap.enabled=true
-    //renderer.shadowMap.type=THREE.PCFSoftShadowMap
+    //renderer.physicallyCorrectLights=true
+    //renderer.toneMapping=THREE.CineonToneMapping
+    renderer.shadowMap.type=THREE.VSMShadowMap
     document.body.appendChild(renderer.domElement)
     
     window.addEventListener('resize', canvasResize)
@@ -112,18 +119,15 @@ function display() {
     //LUCES
     createLight(xpos+0,ypos+0,zpos+0) 
 
-    
-    //PISO 
-    loadPiso(xpos+0,ypos+0,zpos+0)
+    //PISO
+    loadPisoMadera(xpos+0,ypos+0,zpos+0)
+
 
     //PAREDES
     loadParedes(xpos+0,ypos+2,zpos+0)
     
     //VENTANAS
     loadVentana(xpos+0,ypos,zpos)
-
-    //PISO
-    loadPiso(xpos+0,ypos+0,zpos+0)
 
     //SILLAS 
     loadSillas(xpos+15,ypos+0,zpos+-20)
@@ -142,20 +146,85 @@ function display() {
     loadPizarra(xpos+0,ypos+0,zpos+0)
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
     
+    //ITEMS SOMBRE MESA
+    loadLaptop(0,0,0)
+
     //controles para mover objetos (Deshabilitar Orbit Controls )
     //enableDragControls()
 
+    //Sector PRUEBAS
+    loadRecuadros()
+    loadTorreta(xpos+0,ypos+0,zpos+0)
+    //cuboPrueba()
+    
+    
     //LOOP DE RENDERIZADO
     animate()
 }
 function cuboPrueba() {
     const material=new THREE.MeshPhongMaterial({color: 0xa4e7ff})
-    const cubo=new THREE.BoxGeometry(1,1,1)
+    const cubo=new THREE.BoxGeometry(40,40,80)
     const cuboObjeto=new THREE.Mesh(cubo,material)
-    cuboObjeto.position.set(0,10,0)
+    cuboObjeto.position.set(0,0,2)
     cuboObjeto.receiveShadow=true;
     cuboObjeto.castShadow=true;
     scene.add(cuboObjeto)
+}
+
+function paredShadows1(cx,cy,cz,cr) {
+    const material=new THREE.MeshToonMaterial({color: 0xffffff})
+    const cubo=new THREE.BoxGeometry(0.5,70,198)
+    const cuboObjeto=new THREE.Mesh(cubo,material)
+    cuboObjeto.position.set(cx,cy,cz)
+    cuboObjeto.rotation.set(0,cr,0)
+    cuboObjeto.receiveShadow=true;
+    cuboObjeto.castShadow=false;
+    scene.add(cuboObjeto)
+}
+function loadRecuadros() {
+    loadCuadro(42*1,45,-34,25,35,Math.PI*0.0,'CuboCOmpPoster2.jpg')
+    loadCuadro(42*2,45,-34,25,35,Math.PI*0.0,'CakeLiePoster3.gif')
+    loadCuadro(42*3,45,-34,25,35,Math.PI*0.0,'CaveJohnsonPoster4.jpg')
+    
+    loadCuadro(90,45,-40,100,40,Math.PI*1.0,'AperturePoster1.jpg')
+}
+function loadCuadro(coordx,coordy,coordz,cwidth,cheight,rotate,img) {
+    loadAssets.clearall()
+    loadAssets.setResize(cwidth/10,1.0,cheight/10)
+    loadAssets.setRotation(Math.PI*0.5,0,rotate)
+    loadAssets.setCords(coordx,coordy,coordz)
+    loadAssets.Marco(scene)
+
+    loadPoster(coordx,coordy,coordz,-rotate,img,cwidth-(cwidth/10),cheight-(cheight/10))
+    
+    const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xd6f2fc, transparent:true, opacity: 0.2})
+    const rectangulo=new THREE.BoxGeometry(cwidth-(cwidth/10),cheight-(cheight/10),0.5)
+    const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
+    ventana.position.set(coordx,coordy,coordz)
+    ventana.rotation.set(0,rotate,0)
+    ventana.receiveShadow=true
+    scene.add(ventana)
+}
+function loadLaptop(coordx,coordy,coordz) {
+    loadAssets.clearall()
+    loadAssets.setResizeUnic(0.14)
+    loadAssets.setCords(coordx+129,coordy+22,coordz-115)
+    loadAssets.Laptop(scene)
+}
+function loadPoster(coordx,coordy,coordz,rotate,img,pAncho,pAlto) {
+
+    const planePoster=new THREE.PlaneGeometry(pAncho,pAlto,pAncho,pAlto)
+    const imgPoster=new THREE.MeshToonMaterial({color:0xffffff, side:THREE.DoubleSide})
+    if(img!=undefined){
+        const loadImg=new THREE.TextureLoader().load('/assets/img/'+img)
+        imgPoster.map=loadImg
+    }
+    const poster=new THREE.Mesh(planePoster,imgPoster)
+    poster.position.set(coordx,coordy,coordz)
+    poster.rotation.set(0,rotate,0)
+    poster.receiveShadow=true
+    poster.castShadow=true
+    scene.add(poster)
 }
 function loadVentana(coordx,coordy,coordz) {
     const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
@@ -165,8 +234,14 @@ function loadVentana(coordx,coordy,coordz) {
     ventana.position.set(coordx+21,coordy+44.5,coordz+142)
     ventana.receiveShadow=true
     scene.add(ventana)
-
     
+}
+function loadTorreta(coordx,coordy,coordz) {
+    loadAssets.clearall()
+
+    loadAssets.setResize(0.35,0.35,0.35)
+    loadAssets.setCords(coordx,coordy+0,coordz+200)
+    loadAssets.TorretaPortal(scene)
 }
 function loadParedes(coordx,coordy,coordz) {
     loadAssets.clearall()
@@ -190,6 +265,8 @@ function loadParedes(coordx,coordy,coordz) {
 
 
     //paredes
+    
+
     loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.setCords(coordx+2,coordy+0,coordz+75)
     loadAssets.ParedPuertaSimple(scene) 
@@ -205,9 +282,9 @@ function loadParedes(coordx,coordy,coordz) {
 
     
 
-    loadAssets.setResize(1.0,1.2,0.89)
+    loadAssets.setResize(1.0,1.2,0.835)
     loadAssets.setRotation(0,Math.PI*0.0,0)
-    loadAssets.setCords(coordx+-89+4,coordy+0,coordz+-14.5)
+    loadAssets.setCords(coordx+-89+4,coordy+0,coordz+-18.5)
     loadAssets.ParedSimple(scene) 
 
     loadAssets.setResize(1.0,1.2,0.51)
@@ -218,36 +295,32 @@ function loadParedes(coordx,coordy,coordz) {
     
 
 }
-function loadPiso(coordx,coordy,coordz) {
+function loadPisoMadera() {
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/maderaModel1.png')
+    pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
+    pisoTextureLoader.repeat.set(4,4)
+    pisoTextureLoader.rotation=Math.PI*0.5
+    const boxPiso=new THREE.PlaneGeometry(200,241,100,100)
+    const texturePiso=new THREE.MeshPhongMaterial({color:0x636158, side:THREE.DoubleSide})
+    texturePiso.map=pisoTextureLoader
+    const piso= new THREE.Mesh(boxPiso,texturePiso)
+    piso.position.set(100,1.9,-79)
+    piso.rotation.set(Math.PI*0.5,0,0)
+    piso.receiveShadow=true
+    scene.add(piso)
+}
+function loadAlterPisoA() {
+    const boxPiso=new THREE.PlaneGeometry(400,400,400,400)
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xffffff, side:THREE.DoubleSide})
     const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/maderaModel1.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
     pisoTextureLoader.repeat.set(3,3)
-    const boxPiso=new THREE.PlaneGeometry(400,400,400,400)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0xffffff, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(0,1.9,0)
     piso.rotation.set(Math.PI*0.5,0,0)
     piso.receiveShadow=true
-    console.log(piso)
     scene.add(piso)
-
-    // loadAssets.clearall()
-
-    // loadAssets.setCords(coordx,coordy,coordz)
-    // loadAssets.piso(scene)
-
-    // //loadAssets.setRotation(0,Math.PI*1.0,0)
-    // loadAssets.setCords(coordx+-200,coordy+0,coordz+0)
-    // loadAssets.piso(scene)
-
-    // //loadAssets.setRotation(0,Math.PI*0.5,0)
-    // loadAssets.setCords(coordx+-200,coordy+0,coordz+200)
-    // loadAssets.piso(scene)
-
-    // //loadAssets.setRotation(0,Math.PI*0.5,0)
-    // loadAssets.setCords(coordx+0,coordy+0,coordz+200)
-    // loadAssets.piso(scene)
 }
 function loadVideo(coordx,coordy,coordz,psize) {
     video=document.getElementById('VideoPresentation')
@@ -256,12 +329,15 @@ function loadVideo(coordx,coordy,coordz,psize) {
     vidTex.minFilter= THREE.LinearFilter
     vidTex.magFilter= THREE.LinearFilter
 
-    var movieMaterial = new THREE.MeshBasicMaterial({map:vidTex})
+    var movieMaterial = new THREE.MeshToonMaterial({map:vidTex})
     var plano=new THREE.PlaneGeometry(16*psize,9*psize,4,4)
     var movieScreen=new THREE.Mesh(plano,movieMaterial)
+    movieScreen.receiveShadow=true
+    movieScreen.castShadow=true
     movieScreen.position.set(coordx,coordy,coordz)
     movieScreen.rotateY(Math.PI*0.5)
     scene.add(movieScreen)
+    video.currentTime=1.1
 
 }
 function loadSillas(coordx,coordy,coordz){
@@ -363,7 +439,10 @@ function loadCientificos(coordx,coordy,coordz) {
     loadAssets.setRotation(0,Math.PI*-0.40,0)
     loadAssets.cientifico(scene)
 
-    
+    loadAssets.setCords(coordx+10,coordy+2,coordz+90)
+    loadAssets.setResize(0.4,0.45,0.4)
+    loadAssets.setRotation(0,Math.PI*-0.5,0)
+    loadAssets.cientifico(scene)
 }
 function loadCientificoSentado( coordx, coordy, coordz) {
     loadAssets.clearall()
@@ -407,50 +486,102 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    light=new THREE.AmbientLight(0xffffff,0.7)
+    light=new THREE.AmbientLight(0xffffff,0.5)
     scene.add(light)
     
+    RectAreaLightUniformsLib.init()
+
     //light 2
     const width=55.0;
     const height=30.0;
-    light2=new THREE.RectAreaLight(0xfcfbda ,0.3,width,height)
-    light2.position.set(coordx+-90,coordy+30,coordz+-19)
-    light2.lookAt(coordx+-1000,coordy+20,coordz+0)
+    light2=new THREE.RectAreaLight(0xfcfbda ,0.5,width,height)
+    light2.position.set(coordx+-91,coordy+30,coordz+-19)
+    light2.lookAt(coordx+-100,coordy+30,coordz+-19)
     scene.add(light2)
+    //scene.add(new RectAreaLightHelper(light2))
 
     //light 3
-    const distance = 10.0
-    const angle= Math.PI *0.13
-    const penumbra=0.5
-    const decay=0.5 
+    const distancel3 = 10.0
+    const anglel3= Math.PI *0.13
+    const penumbral3=0.5
+    const decayl3=0.5 
     light3=new THREE.SpotLight(
         0xfefdec,
         0.2,
-        distance,
-        angle,
-        penumbra,
-        decay
+        distancel3,
+        anglel3,
+        penumbral3,
+        decayl3
     )
     light3.position.set(coordx+-40,coordy+30,coordz+-20)
     light3.target.position.set(coordx+-95,coordy+30,coordz+-20)
-    //light3.target.position.set(coordx+95,coordy+30,coordz+-120)
 
     scene.add(light3)
     scene.add(light3.target)
     
     //light 4
-    light4 = new THREE.RectAreaLight(0xfcfbda,2.0,7,5)
-    light4.position.set(coordx+-21,coordy+45,coordz+-27)
-    light4.lookAt(coordx+1000,coordy+30,coordz+-19)
+    light4 = new THREE.RectAreaLight(0xfcfbda,0.5,7,5)
+    light4.position.set(coordx+-21,coordy+45.5,coordz+-24)
+    light4.lookAt(coordx+100,coordy+45.5,coordz+-24)
     scene.add(light4)
+    //scene.add(new RectAreaLightHelper(light4))
     
+    //light 5 
+    const distancel5 = 600.0
+    const anglel5= Math.PI *0.45
+    const penumbral5=0.5
+    const decayl5=0.0 
+    light5=new THREE.SpotLight(
+        0xfefdec,
+        0.2,
+        distancel5,
+        anglel5,
+        penumbral5,
+        decayl5
+    )
+    light5.position.set(10,40,-120)
+    light5.target.position.set(300,10,-120)
     
-    //lightHelper=new THREE.SpotLightHelper(light3)
+    //light5.power=1
+    light5.castShadow=true
+    light5.shadow.mapSize.width=100
+    light5.shadow.mapSize.height=100
+    light5.shadow.camera.near=30
+    light5.shadow.camera.far=200
+
+
+    scene.add(light5)
+    scene.add(light5.target)
+
+    //light 6 7 8 
+    light6=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
+    light6.position.set(42,45,-30)
+    light6.lookAt(42,45,-50)
+    scene.add(light6)
+    //scene.add(new RectAreaLightHelper(light6))
+
+    light7=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
+    light7.position.set(42*2,45,-30)
+    light7.lookAt(42*2,45,-50)
+    scene.add(light7)
+    //scene.add(new RectAreaLightHelper(light7))
+
+    light8=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
+    light8.position.set(42*3,45,-30)
+    light8.lookAt(42*3,45,-50)
+    scene.add(light8)
+    //scene.add(new RectAreaLightHelper(light8))
+
+
+
+    //lightHelper=new THREE.PointLightHelper(light6)
+    //scene.add(lightHelper)
+    //lightHelper=new THREE.SpotLightHelper(light5)
     // lightHelper=new THREE.SpotLightHelper(light3)
-    // scene.add(lightHelper) 
+    //scene.add(lightHelper) 
     
-    // camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
-    // scene.add(camerShadowHelper)
+    //camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
+    //scene.add(camerShadowHelper)
 }
 function skybox_Background() {
     const __dirSkyBox='/assets/img/'
@@ -501,7 +632,7 @@ function skybox_Background() {
 function animate(){
     requestAnimationFrame(animate)
     //update()
-    //stats.update()
+    stats.update()
     //lightHelper.update()
     //camerShadowHelper.update()
     renderer.render(scene, camera)
@@ -523,8 +654,6 @@ function addGui() {
     videoFolder.add(vidparams,"Stop")
     videoFolder.add(vidparams,"Replay")
     videoFolder.open()
-
-
 }
 function canvasResize(){
     camera.aspect = window.innerWidth / window.innerHeight 
@@ -539,7 +668,7 @@ function playvideo() {
 function stopvideo() {
     video.pause()
     status=false
-    video.currentTime=0
+    video.currentTime=1.1
 }
 function pausevideo() {
     video.pause()
@@ -547,7 +676,7 @@ function pausevideo() {
 }
 function replayvideo() {
     video.pause()
-    video.currentTime=0
+    video.currentTime=1.1
     video.play()
     status=true
 }
@@ -563,7 +692,7 @@ function update(){
     }
     if(keyboard.pressed("s")){
         video.pause()
-        video.currentTime=0
+        video.currentTime=1.1
         status=false
     }   
         
