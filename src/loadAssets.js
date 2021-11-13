@@ -123,7 +123,7 @@ export function mesa_con_fin(scene) {
     cargar(__dirModels+'MesaconFin.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function proyector(scene) {
-    cargar(__dirModels+'Proyector.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    cargar(__dirModels+'proyector.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function cientifico(scene) {
     cargar(__dirModels+'cientifico.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)

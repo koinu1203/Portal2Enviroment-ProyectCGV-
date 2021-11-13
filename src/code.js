@@ -181,7 +181,7 @@ function paredShadows1(cx,cy,cz,cr) {
     scene.add(cuboObjeto)
 }
 function loadRecuadros() {
-    loadCuadro(42*1,45,-34,25,35,Math.PI*0.0,'CuboCOmpPoster2.jpg')
+    loadCuadro(42*1,45,-34,25,35,Math.PI*0.0,'CuboCompPoster2.jpg')
     loadCuadro(42*2,45,-34,25,35,Math.PI*0.0,'CakeLiePoster3.gif')
     loadCuadro(42*3,45,-34,25,35,Math.PI*0.0,'CaveJohnsonPoster4.jpg')
     
@@ -295,7 +295,7 @@ function loadParedes(coordx,coordy,coordz) {
 
 }
 function loadPisoMadera() {
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/maderaModel1.png')
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/MaderaModel1.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
     pisoTextureLoader.repeat.set(4,4)
     pisoTextureLoader.rotation=Math.PI*0.5
