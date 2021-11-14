@@ -112,16 +112,21 @@ function display() {
     /*xpos=0
     ypos=0
     zpos=0*/
+
     //Skybox / fondo
     skybox_Background()
 
     //LUCES
     createLight(xpos+0,ypos+0,zpos+0) 
 
+    //PERIMETRO
+    loadPerimetro()
+
     //PISO
     loadPisoMadera(xpos+0,ypos+0,zpos+0)
     loadAlterPisoA()
     loadPisoMadera2()
+    loadAlterPisoB()
 
     //PAREDES
     loadParedes(xpos+0,ypos+2,zpos+0)
@@ -149,6 +154,9 @@ function display() {
     //RECUADROS
     loadRecuadros()
 
+    //ESCRITORIOS
+    loadEscritorios()
+
     //ITEMS SOMBRE MESA
     loadLaptop(0,0,0)
 
@@ -156,10 +164,9 @@ function display() {
     //enableDragControls()
 
     //Sector PRUEBAS
-    
     loadTorreta(xpos+0,ypos+0,zpos+0)
+    loadEdificio()
     //cuboPrueba()
-    loadEscritorios()
     
     //LOOP DE RENDERIZADO
     animate()
@@ -172,6 +179,48 @@ function cuboPrueba() {
     cuboObjeto.receiveShadow=true;
     cuboObjeto.castShadow=true;
     scene.add(cuboObjeto)
+}
+function loadEdificio() {
+    
+    const edificioGeomtry=new THREE.BoxGeometry(408,700,408)
+    const imgEdifcio=new THREE.MeshToonMaterial({color:0xffffff, side:THREE.DoubleSide})
+    const loadImg=new THREE.TextureLoader().load('/assets/img/Edificio2.png')
+    loadImg.wrapS=loadImg.wrapT=THREE.RepeatWrapping
+    loadImg.repeat.set(1,0.9)
+    imgEdifcio.map=loadImg
+    const edificio=new THREE.Mesh(edificioGeomtry,imgEdifcio)
+    edificio.position.set(0,-348.8,0)
+    edificio.rotation.set(0,0,0)
+    //poster.receiveShadow=true
+    //poster.castShadow=true
+    scene.add(edificio)
+}
+function loadPerimetro() {
+    const colorP= 0xf2f3e0
+    const miniParedA=new THREE.Mesh(
+        new THREE.BoxGeometry(400,3,4),
+        new THREE.MeshToonMaterial({color: colorP})
+    )
+    miniParedA.position.set(0,3.78,202)
+    miniParedA.receiveShadow=true
+    scene.add(miniParedA)
+
+    const miniParedB=new THREE.Mesh(
+        new THREE.BoxGeometry(4,3,407),
+        new THREE.MeshToonMaterial({color: colorP})
+    )
+    miniParedB.receiveShadow=true
+    //miniParedB.rotation.set(0,Math.PI*0.5,0)
+    miniParedB.position.set(202,3.78,0.5)
+    scene.add(miniParedB)
+
+    const miniParedC=miniParedA.clone()
+    miniParedC.position.set(0,3.78,-201)
+    scene.add(miniParedC)
+
+    const miniParedD=miniParedB.clone()
+    miniParedD.position.set(-202,3.78,0)
+    scene.add(miniParedD)
 }
 function loadEscritorios() {
     loadAssets.clearall()
@@ -331,22 +380,36 @@ function loadPisoMadera() {
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
     pisoTextureLoader.repeat.set(4,4)
     pisoTextureLoader.rotation=Math.PI*0.5
-    const boxPiso=new THREE.PlaneGeometry(200,241,100,100)
+    const boxPiso=new THREE.PlaneGeometry(200,164,100,100)
     const texturePiso=new THREE.MeshPhongMaterial({color:0x636158, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
-    piso.position.set(100,1.9,-79)
+    piso.position.set(100,1.9,-118)
+    piso.rotation.set(Math.PI*0.5,0,0)
+    piso.receiveShadow=true
+    scene.add(piso)
+}
+function loadAlterPisoB() {
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel1.png')
+    pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
+    pisoTextureLoader.repeat.set(3,1)
+    //pisoTextureLoader.rotation=Math.PI*0.5
+    const boxPiso=new THREE.PlaneGeometry(200,77.5,100,100)
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xa3a3a3, side:THREE.DoubleSide})
+    texturePiso.map=pisoTextureLoader
+    const piso= new THREE.Mesh(boxPiso,texturePiso)
+    piso.position.set(100,1.9,2.7)
     piso.rotation.set(Math.PI*0.5,0,0)
     piso.receiveShadow=true
     scene.add(piso)
 }
 function loadPisoMadera2() {
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/MaderaModel1.png')
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel1.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
-    pisoTextureLoader.repeat.set(4,4)
-    pisoTextureLoader.rotation=Math.PI*0.5
+    pisoTextureLoader.repeat.set(2,4)
+    //pisoTextureLoader.rotation=Math.PI*0.5
     const boxPiso=new THREE.PlaneGeometry(200,400,100,100)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0x636158, side:THREE.DoubleSide})
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xa3a3a3, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(-100,1.9,0)
@@ -542,7 +605,7 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    light=new THREE.AmbientLight(0xffffff,0.8)
+    light=new THREE.AmbientLight(0xffffff,1.4)
     scene.add(light)
     
     RectAreaLightUniformsLib.init()

@@ -192,3 +192,12 @@ export function SillaOficina1(scene) {
 export function EscritorioOficina(scene,num) {
     cargar(__dirModels+'EscritorioOficina'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
+export function Wheatley(scene) {
+    cargar(__dirModels+'Wheatley.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Pera(scene) {
+    cargar(__dirModels+'Pera.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Cafe(scene) {
+    cargar(__dirModels+'Pera.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
