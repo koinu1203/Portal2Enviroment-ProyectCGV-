@@ -125,11 +125,11 @@ export function mesa_con_fin(scene) {
 export function proyector(scene) {
     cargar(__dirModels+'proyector.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
-export function cientifico(scene) {
-    cargar(__dirModels+'cientifico2.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+export function cientifico(scene,num) {
+    cargar(__dirModels+'cientifico'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
-export function cientificoSentado(scene) {
-    cargar(__dirModels+'cientificoSentado2.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+export function cientificoSentado(scene,num) {
+    cargar(__dirModels+'cientificoSentado'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function PizarraDigital(scene) {
     cargar(__dirModels+'PizarraDigital.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
@@ -183,12 +183,12 @@ export function Laptop(scene) {
 export function Marco(scene) {
     cargar(__dirModels+'Marco.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
-export function EscritorioOficina1(scene) {
-    cargar(__dirModels+'EscritorioOficina1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
-}
 export function OficeComplete(scene) {
     cargar(__dirModels+'OficeComplete.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function SillaOficina1(scene) {
     cargar(__dirModels+'SillaOficina1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function EscritorioOficina(scene,num) {
+    cargar(__dirModels+'EscritorioOficina'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }

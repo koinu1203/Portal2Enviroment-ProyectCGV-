@@ -67,7 +67,7 @@ function init() {
     scene.background = new THREE.Color(0x2a3b4c)
 
     camera = new THREE.PerspectiveCamera(
-        90,
+        60,
         window.innerWidth/window.innerHeight,
         5.0,
         3000
@@ -120,7 +120,8 @@ function display() {
 
     //PISO
     loadPisoMadera(xpos+0,ypos+0,zpos+0)
-
+    loadAlterPisoA()
+    loadPisoMadera2()
 
     //PAREDES
     loadParedes(xpos+0,ypos+2,zpos+0)
@@ -145,6 +146,9 @@ function display() {
     loadPizarra(xpos+0,ypos+0,zpos+0)
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
     
+    //RECUADROS
+    loadRecuadros()
+
     //ITEMS SOMBRE MESA
     loadLaptop(0,0,0)
 
@@ -152,11 +156,10 @@ function display() {
     //enableDragControls()
 
     //Sector PRUEBAS
-    loadRecuadros()
+    
     loadTorreta(xpos+0,ypos+0,zpos+0)
     //cuboPrueba()
-    loadAlterPisoA()
-    loadPisoMadera2()
+    loadEscritorios()
     
     //LOOP DE RENDERIZADO
     animate()
@@ -170,7 +173,35 @@ function cuboPrueba() {
     cuboObjeto.castShadow=true;
     scene.add(cuboObjeto)
 }
+function loadEscritorios() {
+    loadAssets.clearall()
+    loadAssets.setResizeUnic(1.0)
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    
+    loadAssets.setCords(-80,2,-130)
+    loadAssets.EscritorioOficina(scene,2)
 
+    loadAssets.setCords(-80,2,-40)
+    loadAssets.EscritorioOficina(scene,3)
+
+    loadAssets.setCords(-170,2,-130)
+    loadAssets.EscritorioOficina(scene,4)
+
+    loadAssets.setCords(-170,2,-40)
+    loadAssets.EscritorioOficina(scene,2) 
+
+    loadAssets.setCords(-80,2, 75)
+    loadAssets.EscritorioOficina(scene,3)
+
+    loadAssets.setCords(-170,2, 75)
+    loadAssets.EscritorioOficina(scene,2)
+
+    loadAssets.setCords(-80,2, 165)
+    loadAssets.EscritorioOficina(scene,4)
+
+    loadAssets.setCords(-170,2, 165)
+    loadAssets.EscritorioOficina(scene,5)
+}
 function paredShadows1(cx,cy,cz,cr) {
     const material=new THREE.MeshToonMaterial({color: 0xffffff})
     const cubo=new THREE.BoxGeometry(0.5,70,198)
@@ -436,27 +467,27 @@ function loadCientificos(coordx,coordy,coordz) {
     loadAssets.setCords(coordx+-50,coordy+2,coordz+30)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*0.4,0)
-    loadAssets.cientifico(scene)
+    loadAssets.cientifico(scene,2)
 
     loadAssets.setCords(coordx+70,coordy+2,coordz+-40)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.40,0)
-    loadAssets.cientifico(scene) 
+    loadAssets.cientifico(scene,2) 
 
     loadAssets.setCords(coordx+-20,coordy+2,coordz+-60)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.27,0)
-    loadAssets.cientifico(scene)
+    loadAssets.cientifico(scene,2)
 
     loadAssets.setCords(coordx+10,coordy+2,coordz+-80)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.40,0)
-    loadAssets.cientifico(scene)
+    loadAssets.cientifico(scene,2)
 
     loadAssets.setCords(coordx+10,coordy+2,coordz+90)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.5,0)
-    loadAssets.cientifico(scene)
+    loadAssets.cientifico(scene,2)
 }
 function loadCientificoSentado( coordx, coordy, coordz) {
     loadAssets.clearall()
@@ -465,17 +496,17 @@ function loadCientificoSentado( coordx, coordy, coordz) {
     loadAssets.setCords(98,coordy+7,-139)
     //loadAssets.setResize(0.4,0.35,0.3)
     loadAssets.setRotation(0,Math.PI*-0.1,0)
-    loadAssets.cientificoSentado(scene)
+    loadAssets.cientificoSentado(scene,2)
 
     loadAssets.setCords(132,coordy+7,-102)
     //loadAssets.setResize(0.4,0.35,0.3)
     loadAssets.setRotation(0,Math.PI*1.0,0)
-    loadAssets.cientificoSentado(scene)    
+    loadAssets.cientificoSentado(scene,2)    
 
     loadAssets.setCords(148,coordy+7,-102)
     //loadAssets.setResize(0.4,0.35,0.3)
     loadAssets.setRotation(Math.PI*0.05,Math.PI*1.1,0)
-    loadAssets.cientificoSentado(scene)    
+    loadAssets.cientificoSentado(scene,2)    
 
     //sillas
     loadAssets.setResize(0.4,0.43,0.4)
@@ -511,7 +542,7 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    light=new THREE.AmbientLight(0xffffff,0.5)
+    light=new THREE.AmbientLight(0xffffff,0.8)
     scene.add(light)
     
     RectAreaLightUniformsLib.init()
@@ -610,7 +641,7 @@ function createLight(coordx,coordy,coordz){
 }
 function skybox_Background() {
     const __dirSkyBox='/assets/img/'
-    skyboxName='sleepyhollow_'
+    skyboxName='bluecloud_'
     let materialArray=[]
     let tex_ft=new THREE.TextureLoader().load(__dirSkyBox+skyboxName+'ft.jpg')
     let tex_bk=new THREE.TextureLoader().load(__dirSkyBox+skyboxName+'bk.jpg')
