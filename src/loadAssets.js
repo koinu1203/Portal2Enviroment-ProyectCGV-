@@ -201,3 +201,18 @@ export function Pera(scene) {
 export function Cafe(scene) {
     cargar(__dirModels+'Pera.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
+export function Laboratorio(scene,num) {
+    cargar(__dirModels+'Laboratorio'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Elevador(scene) {
+    cargar(__dirModels+'Elevador.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Closet(scene) {
+    cargar(__dirModels+'Closet.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Shower(scene) {
+    cargar(__dirModels+'Shower.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function SillaOficina2(scene) {
+    cargar(__dirModels+'SillaOficina2.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}

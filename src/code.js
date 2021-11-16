@@ -72,8 +72,8 @@ function init() {
         5.0,
         3000
     )
-    camera.position.set(200,100,-200)
-    camera.lookAt(0,0,0)
+    //camera.lookAt(-200,1,200)
+    camera.position.set(-200,100,200)
 
     renderer = new THREE.WebGLRenderer({antialias:true})
     renderer.setPixelRatio(window.devicePixelRatio)
@@ -115,6 +115,7 @@ function display() {
 
     //Skybox / fondo
     skybox_Background()
+    loadEdificio()
 
     //LUCES
     createLight(xpos+0,ypos+0,zpos+0) 
@@ -133,7 +134,10 @@ function display() {
     
     //VENTANAS
     loadVentana(xpos+0,ypos,zpos)
-
+    
+    //ASCENSOR
+    loadAsensor()
+    
     //SILLAS 
     loadSillas(xpos+15,ypos+0,zpos+-20)
 
@@ -152,10 +156,16 @@ function display() {
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
     
     //RECUADROS
-    loadRecuadros()
+    //loadRecuadros()
+
+    //LABORATORIO
+    laboratorio()
+    loadShower()
+    loadCloset()
 
     //ESCRITORIOS
     loadEscritorios()
+    loadOficinistas()
 
     //ITEMS SOMBRE MESA
     loadLaptop(0,0,0)
@@ -164,8 +174,7 @@ function display() {
     //enableDragControls()
 
     //Sector PRUEBAS
-    loadTorreta(xpos+0,ypos+0,zpos+0)
-    loadEdificio()
+    loadLabScene(xpos+0,ypos+0,zpos+0)
     //cuboPrueba()
     
     //LOOP DE RENDERIZADO
@@ -179,6 +188,144 @@ function cuboPrueba() {
     cuboObjeto.receiveShadow=true;
     cuboObjeto.castShadow=true;
     scene.add(cuboObjeto)
+}
+function loadOficinistas(){
+    loadAssets.clearall()
+    loadAssets.setResizeUnic(1.0)
+    loadAssets.setRotation(0,Math.PI*-0.25,0)
+
+
+    //IZQUIERDA
+    loadAssets.setCords(-56,2,56)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-58,7,57)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-69.5,38.2,74,'background.png',13.5,14)
+
+    loadAssets.setCords(-56,2,146)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-58,7,147)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0) 
+    loadPosterAlter(-69.5,38.2,164,'background.png',13.5,14)
+
+    loadAssets.setCords(-146,2,56)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-148,7,57)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-159.5,38.2,74,'background.png',13.5,14)
+
+    loadAssets.setCords(-146,2,146)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-148,7,147)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-159.5,38.2,164,'background.png',13.5,14)
+
+    //DERECHA
+    loadAssets.setCords(-56,2,-58)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-58,7,-57)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-69.8,38.2,-40.8,'background.png',13.5,14)
+
+    loadAssets.setCords(-146,2,-58)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-148,7,-57)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-159.8,38.2,-40.8,'background.png',13.5,14)
+
+    loadAssets.setCords(-56,2,-148)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-58,7,-147)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-69.8,38.2,-130.8,'background.png',13.5,14)
+
+    loadAssets.setCords(-146,2,-148)
+    loadAssets.SillaOficina2(scene)
+    loadAssets.setResizeUnic(0.9)
+    loadAssets.setCords(-148,7,-147)
+    loadAssets.cientificoSentado(scene,2)
+    loadAssets.setResizeUnic(1.0)
+    loadPosterAlter(-159.8,38.2,-130.8,'background.png',13.5,14)
+}
+function loadAsensor() {
+    loadAssets.clearall()
+    loadAssets.setResize(0.46,0.6,0.40)
+    loadAssets.setRotation(0,Math.PI*-0.5,0)
+    loadAssets.setCords(161,2,-0.3)
+    loadAssets.Elevador(scene)
+}
+function laboratorio() {
+    loadAssets.clearall()
+    loadAssets.setResize(0.8,0.8,0.7)
+
+    loadAssets.setCords(61,2,179)
+    loadAssets.setRotation(0,Math.PI*-1.0,0)
+    loadAssets.Laboratorio(scene,1)
+
+    loadAssets.setCords(78,2,66)
+    //loadAssets.setResize(1.0,0.9,0.85)
+    loadAssets.setRotation(0,Math.PI*-0.0,0)
+    loadAssets.Laboratorio(scene,2)
+}
+function loadShower() {
+    loadAssets.clearall()
+    loadAssets.setResize(0.4,0.4,0.4)
+    loadAssets.setRotation(0,Math.PI*-0.0,0)
+    loadAssets.setCords(170,2,62)
+    loadAssets.Shower(scene)
+
+    const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xa1c8d6, transparent:true, opacity: 0.9})
+    const vidrioA=new THREE.Mesh(
+        new THREE.BoxGeometry(30,56,2),
+        vidrioMaterial
+    )
+    vidrioA.position.set(183,32,76)
+    vidrioA.receiveShadow=true 
+    vidrioA.castShadow=true
+    scene.add(vidrioA)
+
+    const vidrioB=new THREE.Mesh(
+        new THREE.BoxGeometry(20,56,2),
+        vidrioMaterial
+    )
+    vidrioB.position.set(158,32,76)
+    vidrioB.receiveShadow=true 
+    vidrioB.castShadow=true
+    scene.add(vidrioB)
+
+    const vidrioC=new THREE.Mesh(
+        new THREE.BoxGeometry(2,56,34),
+        vidrioMaterial
+    )
+    vidrioC.position.set(147,32,60)
+    vidrioC.receiveShadow=true 
+    vidrioC.castShadow=true
+    scene.add(vidrioC)
+}
+function loadCloset() {
+    loadAssets.clearall()
+    loadAssets.setResize(0.3,0.3,0.25)
+    loadAssets.setRotation(0,Math.PI*1.5,0)
+    loadAssets.setCords(190,2,184)
+    loadAssets.Closet(scene)
+    loadAssets.setCords(190,2,152)
+    loadAssets.Closet(scene)
+    loadAssets.setCords(190,2,120)
+    loadAssets.Closet(scene)
 }
 function loadEdificio() {
     
@@ -306,19 +453,34 @@ function loadPoster(coordx,coordy,coordz,rotate,img,pAncho,pAlto) {
     poster.castShadow=true
     scene.add(poster)
 }
+function loadPosterAlter(coordx,coordy,coordz,img,pAncho,pAlto) {
+
+    const planePoster=new THREE.PlaneGeometry(pAncho,pAlto,pAncho,pAlto)
+    const imgPoster=new THREE.MeshToonMaterial({color:0xffffff,side:THREE.DoubleSide})
+    if(img!=undefined){
+        const loadImg=new THREE.TextureLoader().load('/assets/img/'+img)
+        imgPoster.map=loadImg
+    }
+    const poster=new THREE.Mesh(planePoster,imgPoster)
+    poster.position.set(coordx,coordy,coordz)
+    poster.rotation.set(Math.PI*0.02,Math.PI*-1.245,Math.PI*1.98)
+    poster.receiveShadow=true
+    poster.castShadow=true
+    scene.add(poster)
+}
 function loadVentana(coordx,coordy,coordz) {
     const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
-    const rectangulo=new THREE.BoxGeometry(144,30,4)
+    const rectangulo=new THREE.BoxGeometry(76,34,4)
     const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
     ventana.geometry.scale(1,1.15,1)
-    ventana.position.set(coordx+21,coordy+44.5,coordz+142)
+    ventana.position.set(87,42.3,42)
     ventana.receiveShadow=true
     scene.add(ventana)
     
 }
-function loadTorreta(coordx,coordy,coordz) {
+function loadLabScene(coordx,coordy,coordz) {
     loadAssets.clearall()
-
+    
     loadAssets.setResize(0.35,0.35,0.35)
     loadAssets.setCords(coordx,coordy+0,coordz+200)
     loadAssets.TorretaPortal(scene)
@@ -328,7 +490,7 @@ function loadParedes(coordx,coordy,coordz) {
     loadAssets.setResize(1,1.2,1)
 
     //puertas
-    loadAssets.setCords(coordx+72,coordy+0,coordz+53)
+    loadAssets.setCords(coordx-60,coordy+0,coordz+54)
     loadAssets.PuertaModel1(scene) 
 
     loadAssets.setRotation(0,Math.PI*-0.55,0)
@@ -345,10 +507,8 @@ function loadParedes(coordx,coordy,coordz) {
 
 
     //paredes
-    
-
-    loadAssets.setRotation(0,Math.PI*-0.5,0)
-    loadAssets.setCords(coordx+2,coordy+0,coordz+75)
+    loadAssets.setRotation(0,Math.PI*-1.5,0)
+    loadAssets.setCords(coordx+2,coordy+0,coordz+52)
     loadAssets.ParedPuertaSimple(scene) 
 
     loadAssets.setRotation(0,Math.PI*0.0,0)
@@ -390,9 +550,9 @@ function loadPisoMadera() {
     scene.add(piso)
 }
 function loadAlterPisoB() {
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel1.png')
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel2.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
-    pisoTextureLoader.repeat.set(3,1)
+    pisoTextureLoader.repeat.set(2,0.85)
     //pisoTextureLoader.rotation=Math.PI*0.5
     const boxPiso=new THREE.PlaneGeometry(200,77.5,100,100)
     const texturePiso=new THREE.MeshPhongMaterial({color:0xa3a3a3, side:THREE.DoubleSide})
@@ -404,7 +564,7 @@ function loadAlterPisoB() {
     scene.add(piso)
 }
 function loadPisoMadera2() {
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel1.png')
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/CeramicaModel2.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
     pisoTextureLoader.repeat.set(2,4)
     //pisoTextureLoader.rotation=Math.PI*0.5
@@ -419,10 +579,10 @@ function loadPisoMadera2() {
 }
 function loadAlterPisoA() {
     const boxPiso=new THREE.PlaneGeometry(200,159,200,200)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0xffffff, side:THREE.DoubleSide})
-    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/OriginalFloorPortal.png')
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xcfcfcf, side:THREE.DoubleSide})
+    const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/PisoModel2.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
-    pisoTextureLoader.repeat.set(5,4)
+    pisoTextureLoader.repeat.set(4,4)
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(100,1.9,121)
@@ -526,7 +686,7 @@ function loadProyector(coordx,coordy,coordz) {
 }
 function loadCientificos(coordx,coordy,coordz) {
     loadAssets.clearall()
-    loadAssets.setResizeUnic(0.8)
+    loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(coordx+-50,coordy+2,coordz+30)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*0.4,0)
@@ -554,7 +714,7 @@ function loadCientificos(coordx,coordy,coordz) {
 }
 function loadCientificoSentado( coordx, coordy, coordz) {
     loadAssets.clearall()
-    loadAssets.setResizeUnic(0.7)
+    loadAssets.setResizeUnic(0.9)
 
     loadAssets.setCords(98,coordy+7,-139)
     //loadAssets.setResize(0.4,0.35,0.3)
