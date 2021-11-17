@@ -150,6 +150,7 @@ function display() {
     //CIENTIFICOS
     loadCientificos(xpos+0,ypos+0,zpos+0)
     loadCientificoSentado(xpos+0,ypos+0,zpos+0)
+    loadCoffes()
 
     //PIZARRA & VIDEO
     loadPizarra(xpos+0,ypos+0,zpos+0)
@@ -263,7 +264,7 @@ function loadOficinistas(){
 }
 function loadAsensor() {
     loadAssets.clearall()
-    loadAssets.setResize(0.46,0.6,0.40)
+    loadAssets.setResize(0.46,0.55,0.40)
     loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.setCords(161,2,-0.3)
     loadAssets.Elevador(scene)
@@ -480,10 +481,38 @@ function loadVentana(coordx,coordy,coordz) {
 }
 function loadLabScene(coordx,coordy,coordz) {
     loadAssets.clearall()
+    loadAssets.setResizeUnic(0.9)
+
+    //Cientificos
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    loadAssets.setCords(10,0,140)
+    loadAssets.cientifico(scene,3)
+
+    loadAssets.setRotation(0,Math.PI*0.0,0)
+    loadAssets.setCords(140,0,120)
+    loadAssets.cientifico(scene,4)
+
+    //Pera, sí una pera
+    loadAssets.setResizeUnic(1.5)
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    loadAssets.setCords(-20,43,126)
+    loadAssets.Pera(scene)
     
+    //Torreta
+    loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.setResize(0.35,0.35,0.35)
-    loadAssets.setCords(coordx,coordy+0,coordz+200)
-    loadAssets.TorretaPortal(scene)
+    loadAssets.setCords(140,coordy+0,140)
+    loadAssets.TorretaPortal(scene) 
+
+    //Laser, sí los laseres mejoran todo :D
+    const points=[]
+    points.push(new THREE.Vector3(6,46,137))
+    points.push(new THREE.Vector3(140,22,140))
+    const line = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(points),
+        new THREE.LineBasicMaterial({color:0xb20000,linewidth:4})
+    )
+    scene.add(line)
 }
 function loadParedes(coordx,coordy,coordz) {
     loadAssets.clearall()
@@ -684,6 +713,20 @@ function loadProyector(coordx,coordy,coordz) {
     loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.proyector(scene)
 }
+function loadCoffes(){
+    loadAssets.clearall()
+    loadAssets.setResizeUnic(0.2)
+
+    loadAssets.setCords(98,26,-12)
+    loadAssets.Cafe(scene)
+
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    loadAssets.setCords(90,22,-130)
+    loadAssets.Cafe(scene)
+
+    loadAssets.setCords(158,27,-139)
+    loadAssets.Cafe(scene)
+}
 function loadCientificos(coordx,coordy,coordz) {
     loadAssets.clearall()
     loadAssets.setResizeUnic(0.9)
@@ -695,7 +738,7 @@ function loadCientificos(coordx,coordy,coordz) {
     loadAssets.setCords(coordx+70,coordy+2,coordz+-40)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.40,0)
-    loadAssets.cientifico(scene,2) 
+    loadAssets.cientifico(scene,4) 
 
     loadAssets.setCords(coordx+-20,coordy+2,coordz+-60)
     //loadAssets.setResize(0.4,0.45,0.4)
@@ -710,7 +753,13 @@ function loadCientificos(coordx,coordy,coordz) {
     loadAssets.setCords(coordx+10,coordy+2,coordz+90)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-0.5,0)
-    loadAssets.cientifico(scene,2)
+    loadAssets.cientifico(scene,6)
+
+    loadAssets.setCords(98,0,90)
+    //loadAssets.setResize(0.4,0.45,0.4)
+    loadAssets.setRotation(0,Math.PI*-1.0,0)
+    loadAssets.cientifico(scene,7)
+
 }
 function loadCientificoSentado( coordx, coordy, coordz) {
     loadAssets.clearall()
@@ -765,7 +814,7 @@ function loadPizarra(coordx,coordy,coordz) {
 function createLight(coordx,coordy,coordz){
 
     //light 1
-    light=new THREE.AmbientLight(0xffffff,1.4)
+    light=new THREE.AmbientLight(0xffffff,1.0)
     scene.add(light)
     
     RectAreaLightUniformsLib.init()
@@ -806,20 +855,20 @@ function createLight(coordx,coordy,coordz){
     //scene.add(new RectAreaLightHelper(light4))
     
     //light 5 
-    const distancel5 = 600.0
-    const anglel5= Math.PI *0.45
-    const penumbral5=0.5
-    const decayl5=0.0 
+    const distancel5 = 200.0
+    const anglel5= Math.PI *0.34
+    const penumbral5=1.0
+    const decayl5=1.0 
     light5=new THREE.SpotLight(
         0xfefdec,
-        0.2,
+        0.9,
         distancel5,
         anglel5,
         penumbral5,
         decayl5
     )
     light5.position.set(10,40,-120)
-    light5.target.position.set(300,10,-120)
+    light5.target.position.set(300,0,-120)
     
     //light5.power=1
     light5.castShadow=true
@@ -833,31 +882,32 @@ function createLight(coordx,coordy,coordz){
     scene.add(light5.target)
 
     //light 6 7 8 
-    light6=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
-    light6.position.set(42,45,-30)
-    light6.lookAt(42,45,-50)
+    //Luz amarilla suave: 0xfeffca
+    light6=new THREE.RectAreaLight(0xffffff,0.7,400,400)
+    light6.position.set(0,80,0)
+    light6.lookAt(0,0,0)
     scene.add(light6)
-    //scene.add(new RectAreaLightHelper(light6))
+    scene.add(new RectAreaLightHelper(light6))
 
-    light7=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
-    light7.position.set(42*2,45,-30)
-    light7.lookAt(42*2,45,-50)
-    scene.add(light7)
-    //scene.add(new RectAreaLightHelper(light7))
+    // light7=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
+    // light7.position.set(42*2,45,-30)
+    // light7.lookAt(42*2,45,-50)
+    // scene.add(light7)
+    // //scene.add(new RectAreaLightHelper(light7))
 
-    light8=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
-    light8.position.set(42*3,45,-30)
-    light8.lookAt(42*3,45,-50)
-    scene.add(light8)
-    //scene.add(new RectAreaLightHelper(light8))
+    // light8=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
+    // light8.position.set(42*3,45,-30)
+    // light8.lookAt(42*3,45,-50)
+    // scene.add(light8)
+    // //scene.add(new RectAreaLightHelper(light8))
 
 
 
     //lightHelper=new THREE.PointLightHelper(light6)
     //scene.add(lightHelper)
-    //lightHelper=new THREE.SpotLightHelper(light5)
+    lightHelper=new THREE.SpotLightHelper(light5)
     // lightHelper=new THREE.SpotLightHelper(light3)
-    //scene.add(lightHelper) 
+    scene.add(lightHelper) 
     
     //camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
     //scene.add(camerShadowHelper)
@@ -912,7 +962,7 @@ function animate(){
     requestAnimationFrame(animate)
     //update()
     stats.update()
-    //lightHelper.update()
+    lightHelper.update()
     //camerShadowHelper.update()
     renderer.render(scene, camera)
 }

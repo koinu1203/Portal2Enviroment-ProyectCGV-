@@ -199,7 +199,7 @@ export function Pera(scene) {
     cargar(__dirModels+'Pera.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function Cafe(scene) {
-    cargar(__dirModels+'Pera.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    cargar(__dirModels+'Cafe.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function Laboratorio(scene,num) {
     cargar(__dirModels+'Laboratorio'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
