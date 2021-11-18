@@ -4,6 +4,10 @@ import * as THREE from "../modules/three.module.js"
 //dir models 
 let __dirModels='/assets/models/'
 
+//sounds
+let sound 
+const __dirSong='/assets/sounds/'
+
 //Coords
 let x=0,y=0,z=0 
 
@@ -72,8 +76,17 @@ export function setResizeUnic(psr) {
     sy=psr
     sz=psr
 }
-
-function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz,shadow){
+function loadSound(song,listener,lisentDistance){
+    sound=new THREE.PositionalAudio(listener)
+    const audioLoader=new THREE.AudioLoader()
+    audioLoader.load(__dirSong+song,function(buffer){
+        sound.setBuffer(buffer)
+        sound.setRefDistance(lisentDistance);
+        sound.setLoop(true)
+        sound.play()
+    })
+}
+function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz,shadow,sound=undefined){
     const loader = new GLTFLoader(manager)
     loader.load(ruta, (gltf)=>{
         gltf.scene.traverse(function (child) {
@@ -95,6 +108,10 @@ function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz,shadow){
         gltf.scene.position.set(px,py,pz)
         gltf.scene.rotation.set(prx,pry,prz)
         gltf.scene.scale.set(psx,psy,psz)
+        if(sound!=undefined){
+            console.log(sound)
+            gltf.scene.add(sound)
+        }
         scene.add(gltf.scene)
         objects.push(gltf.scene)
     },undefined,function (e) {
@@ -215,4 +232,30 @@ export function Shower(scene) {
 }
 export function SillaOficina2(scene) {
     cargar(__dirModels+'SillaOficina2.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function GladosPotato(scene) {
+    cargar(__dirModels+'GladosPotato.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function PortalGun(scene) {
+    cargar(__dirModels+'PortalGun.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function TV(scene) {
+    cargar(__dirModels+'Televisor.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Mandala(scene) {
+    cargar(__dirModels+'Mandala.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function ModuloLunar(scene) {
+    shadow=false
+    cargar(__dirModels+'ModuloLunar.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    shadow=true
+}
+export function Bitcoin(scene) {
+    cargar(__dirModels+'Bitcoin.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function RadioPortal(scene,sound) {
+    cargar(__dirModels+'RadioPortal.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow,sound)
+}
+export function Cohete(scene) {
+    cargar(__dirModels+'Cohete.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }

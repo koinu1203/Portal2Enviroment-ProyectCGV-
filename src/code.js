@@ -46,16 +46,20 @@ let light2 //Rectangular Light
 let light3 //pointer light
 let light4 //Another Rectangular Light
 let light5 //spot Light
-let light6 //point light
-let light7 //point light
-let light8 //point light
+let light6 //RecAreLight
+let light7 //RecAreLight
+let light8 //RecAreLight
+let light9 //RecAreLight
 let lightHelper //light helper
 let camerShadowHelper
 
-//video objects
+//video Vars
 let video
 let vidTex
 let status 
+
+//Audio Vars
+let listener
 
 //Stats (FPS/MS)
 let stats
@@ -99,7 +103,10 @@ function init() {
     gui=new GUI()
     addGui()
     
+    //Orbit controls
     enableOrbitControls()
+    //Listener
+    initListener()
     
     display()
 }
@@ -168,7 +175,7 @@ function display() {
     loadEscritorios()
     loadOficinistas()
 
-    //ITEMS SOMBRE MESA
+    //ITEMS SOMBRE MESA Y OTROS
     loadLaptop(0,0,0)
 
     //controles para mover objetos (Deshabilitar Orbit Controls )
@@ -177,7 +184,7 @@ function display() {
     //Sector PRUEBAS
     loadLabScene(xpos+0,ypos+0,zpos+0)
     //cuboPrueba()
-    
+    loadRadio()
     //LOOP DE RENDERIZADO
     animate()
 }
@@ -190,6 +197,20 @@ function cuboPrueba() {
     cuboObjeto.castShadow=true;
     scene.add(cuboObjeto)
 }
+function loadRadio(){
+    const sound=new THREE.PositionalAudio(listener)
+    const audioLoader=new THREE.AudioLoader()
+    audioLoader.load('/assets/sounds/RadioPortal.ogg',function(buffer){
+        sound.setBuffer(buffer)
+        sound.setRefDistance(5)
+        sound.play()
+    })
+    loadAssets.clearall()
+    loadAssets.setResizeUnic(1)
+    loadAssets.setRotation(0,Math.PI*0.9,0)
+    loadAssets.setCords(30,41,197)
+    loadAssets.RadioPortal(scene,sound)
+}
 function loadOficinistas(){
     loadAssets.clearall()
     loadAssets.setResizeUnic(1.0)
@@ -201,9 +222,16 @@ function loadOficinistas(){
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-58,7,57)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,3)
+
+    loadAssets.setResizeUnic(0.2)
+    loadAssets.setCords(-79,26,43)
+    loadAssets.setRotation(0,Math.PI*0.4,0)
+    loadAssets.TV(scene)
+
+    loadAssets.setRotation(0,Math.PI*-0.25,0)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-69.5,38.2,74,'background.png',13.5,14)
+    loadPosterAlter(-69.5,38.2,74,'Img_WindowsXP.jpg',13.5,14)
 
     loadAssets.setCords(-56,2,146)
     loadAssets.SillaOficina2(scene)
@@ -211,56 +239,94 @@ function loadOficinistas(){
     loadAssets.setCords(-58,7,147)
     loadAssets.cientificoSentado(scene,2)
     loadAssets.setResizeUnic(1.0) 
-    loadPosterAlter(-69.5,38.2,164,'background.png',13.5,14)
+    loadPosterAlter(-69.5,38.2,164,'Img_Ilusion.jpg',13.5,14)
 
     loadAssets.setCords(-146,2,56)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-148,7,57)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,5)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-159.5,38.2,74,'background.png',13.5,14)
+    loadPosterAlter(-159.5,38.2,74,'Img_ErrorWindowsXP.png',13.5,14)
+
 
     loadAssets.setCords(-146,2,146)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-148,7,147)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,4)
+
+    loadAssets.setRotation(0,Math.PI*0.3,0)
+    loadAssets.setResizeUnic(0.5)
+    loadAssets.setCords(-172,23,130)
+    loadAssets.CuboDeCompania(scene)
+
+    loadAssets.setRotation(0,Math.PI*0.3,0)
+    loadAssets.setResizeUnic(0.2)
+    loadAssets.setCords(-142,25,170)
+    loadAssets.GladosPotato(scene)
+
+    loadAssets.setRotation(0,Math.PI*0.3,0)
+    loadAssets.setResizeUnic(0.3)
+    loadAssets.setCords(-120,27,170)
+    loadAssets.PortalGun(scene)
+
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-159.5,38.2,164,'background.png',13.5,14)
+    loadAssets.setRotation(0,Math.PI*-0.25,0)
+    loadPosterAlter(-159.5,38.2,164,'Img_YouWin.jpg',13.5,14)
 
     //DERECHA
     loadAssets.setCords(-56,2,-58)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-58,7,-57)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,4)
+
+    // loadAssets.setRotation(0,Math.PI*1.0,0)
+    // loadAssets.setResizeUnic(0.1)
+    // loadAssets.setCords(-79,27,-68)
+    // loadAssets.ModuloLunar(scene)
+
+    loadAssets.setRotation(Math.PI*0.2,Math.PI*1.0,0)
+    loadAssets.setResizeUnic(0.4)
+    loadAssets.setCords(-79,28,-80)
+    loadAssets.Bitcoin(scene)
+    loadAssets.setRotation(0,Math.PI*-0.25,0)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-69.8,38.2,-40.8,'background.png',13.5,14)
+    loadPosterAlter(-69.8,38.2,-40.8,'Img_Stonks.jpg',13.5,14)
 
     loadAssets.setCords(-146,2,-58)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-148,7,-57)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,7)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-159.8,38.2,-40.8,'background.png',13.5,14)
+    loadPosterAlter(-159.8,38.2,-40.8,'Img_Idiot.jpg',13.5,14)
 
     loadAssets.setCords(-56,2,-148)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-58,7,-147)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,8)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-69.8,38.2,-130.8,'background.png',13.5,14)
+    loadPosterAlter(-69.8,38.2,-130.8,'Img_NoInternet.jpg',13.5,14)
 
     loadAssets.setCords(-146,2,-148)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
     loadAssets.setCords(-148,7,-147)
-    loadAssets.cientificoSentado(scene,2)
+    loadAssets.cientificoSentado(scene,3)
+
+    loadAssets.setRotation(0,Math.PI*-0.3,0)
+    loadAssets.setResizeUnic(0.45)
+    loadAssets.setCords(-132,27,-123)
+    loadAssets.Cake(scene)
+    loadAssets.setCords(-130,35,-123)
+    loadAssets.setResizeUnic(0.15)
+    loadAssets.Vela(scene)
     loadAssets.setResizeUnic(1.0)
-    loadPosterAlter(-159.8,38.2,-130.8,'background.png',13.5,14)
+
+    loadPosterAlter(-159.8,38.2,-130.8,'Img_PortalCamera.jpg',13.5,14)
 }
 function loadAsensor() {
     loadAssets.clearall()
@@ -394,7 +460,7 @@ function loadEscritorios() {
     loadAssets.EscritorioOficina(scene,2)
 
     loadAssets.setCords(-80,2, 165)
-    loadAssets.EscritorioOficina(scene,4)
+    loadAssets.EscritorioOficina(scene,5)
 
     loadAssets.setCords(-170,2, 165)
     loadAssets.EscritorioOficina(scene,5)
@@ -584,7 +650,7 @@ function loadAlterPisoB() {
     pisoTextureLoader.repeat.set(2,0.85)
     //pisoTextureLoader.rotation=Math.PI*0.5
     const boxPiso=new THREE.PlaneGeometry(200,77.5,100,100)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0xa3a3a3, side:THREE.DoubleSide})
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xe1e2af, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(100,1.9,2.7)
@@ -598,7 +664,8 @@ function loadPisoMadera2() {
     pisoTextureLoader.repeat.set(2,4)
     //pisoTextureLoader.rotation=Math.PI*0.5
     const boxPiso=new THREE.PlaneGeometry(200,400,100,100)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0xa3a3a3, side:THREE.DoubleSide})
+    //color : 0xfeffca
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xe1e2af, side:THREE.DoubleSide})
     texturePiso.map=pisoTextureLoader
     const piso= new THREE.Mesh(boxPiso,texturePiso)
     piso.position.set(-100,1.9,0)
@@ -608,7 +675,7 @@ function loadPisoMadera2() {
 }
 function loadAlterPisoA() {
     const boxPiso=new THREE.PlaneGeometry(200,159,200,200)
-    const texturePiso=new THREE.MeshPhongMaterial({color:0xcfcfcf, side:THREE.DoubleSide})
+    const texturePiso=new THREE.MeshPhongMaterial({color:0xeeeeee, side:THREE.DoubleSide})
     const pisoTextureLoader=new THREE.TextureLoader().load('/assets/img/PisoModel2.png')
     pisoTextureLoader.wrapS=pisoTextureLoader.wrapT=THREE.RepeatWrapping
     pisoTextureLoader.repeat.set(4,4)
@@ -881,33 +948,38 @@ function createLight(coordx,coordy,coordz){
     scene.add(light5)
     scene.add(light5.target)
 
-    //light 6 7 8 
+    //light 6 7 8 9
     //Luz amarilla suave: 0xfeffca
-    light6=new THREE.RectAreaLight(0xffffff,0.7,400,400)
-    light6.position.set(0,80,0)
-    light6.lookAt(0,0,0)
+    light6=new THREE.RectAreaLight(0xffffff,0.7,192,154)
+    light6.position.set(100,70,122)
+    light6.lookAt(100,0,122)
     scene.add(light6)
-    scene.add(new RectAreaLightHelper(light6))
+    //scene.add(new RectAreaLightHelper(light6))
 
-    // light7=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
-    // light7.position.set(42*2,45,-30)
-    // light7.lookAt(42*2,45,-50)
-    // scene.add(light7)
-    // //scene.add(new RectAreaLightHelper(light7))
+    light7=new THREE.RectAreaLight(0xfeffca,0.8,198,400)
+    light7.position.set(-100,70,0)
+    light7.lookAt(-100,0,0)
+    scene.add(light7)
+    //scene.add(new RectAreaLightHelper(light7))
 
-    // light8=new THREE.RectAreaLight(0xfeffca,0.5,26,36)
-    // light8.position.set(42*3,45,-30)
-    // light8.lookAt(42*3,45,-50)
-    // scene.add(light8)
-    // //scene.add(new RectAreaLightHelper(light8))
-
+    light8=new THREE.RectAreaLight(0xffffff,0.2,196,160)
+    light8.position.set(104,70,-118)
+    light8.lookAt(104,0,-118)
+    scene.add(light8)
+    //scene.add(new RectAreaLightHelper(light8))
+    
+    light9=new THREE.RectAreaLight(0xfeffca,0.8,137,74)
+    light9.position.set(72,70,3)
+    light9.lookAt(72,0,3)
+    scene.add(light9)
+    scene.add(new RectAreaLightHelper(light9))
 
 
     //lightHelper=new THREE.PointLightHelper(light6)
     //scene.add(lightHelper)
-    lightHelper=new THREE.SpotLightHelper(light5)
+    //lightHelper=new THREE.SpotLightHelper(light5)
     // lightHelper=new THREE.SpotLightHelper(light3)
-    scene.add(lightHelper) 
+    //scene.add(lightHelper) 
     
     //camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
     //scene.add(camerShadowHelper)
@@ -958,11 +1030,16 @@ function skybox_Background() {
     //skybox.material.depthWrite=false
     scene.add(skybox)*/
 }
+function initListener(){
+    listener=new THREE.AudioListener()
+    camera.add(listener)
+
+}
 function animate(){
     requestAnimationFrame(animate)
     //update()
     stats.update()
-    lightHelper.update()
+    //lightHelper.update()
     //camerShadowHelper.update()
     renderer.render(scene, camera)
 }
