@@ -189,7 +189,7 @@ export function PlantaModel1(scene) {
     cargar(__dirModels+'PlantaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function Cake(scene) {
-    cargar(__dirModels+'Cake.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+    cargar(__dirModels+'cake.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function Vela(scene) {
     cargar(__dirModels+'Vela.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
