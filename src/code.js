@@ -6,7 +6,8 @@ import { DragControls } from "../controls/DragControls.js"
 import { GUI } from "../modules/dat.gui.module.js"
 import Stats from "../modules/stats.module.js"
 import { RectAreaLightHelper } from "../Lights/RectAreaLightHelper.js"
-import {RectAreaLightUniformsLib} from "../Lights/RectAreaLightUniformsLib.js"
+import {RectAreaLightUniformsLib} from "../Lights/RectAreaLightUniformsLib.js" 
+import { PositionalAudioHelper} from "../Audio/PositionalAudioHelper.js"
 
 //Graphics variables 
 let camera
@@ -27,10 +28,13 @@ const vidparams={
     Play: playvideo,
     Pause: pausevideo,
     Stop: stopvideo,
-    Replay: replayvideo
+    Replay: replayvideo,
+    Volumen: 40
 }
-const orbitparams={
-    
+const controlparams={
+    Camera_Mov: true,
+    Camera_Rot: true,
+    Elements_Mov: false,
 }
 
 //controls No borrar 
@@ -60,6 +64,7 @@ let status
 
 //Audio Vars
 let listener
+let sound
 
 //Stats (FPS/MS)
 let stats
@@ -103,11 +108,14 @@ function init() {
     gui=new GUI()
     addGui()
     
-    //Orbit controls
+    //Controls
     enableOrbitControls()
-    //Listener
+    enableDragControls()
+
+    //Listener (sound)
     initListener()
     
+    //Mostrar
     display()
 }
 
@@ -164,12 +172,14 @@ function display() {
     loadVideo(xpos+-93,ypos+30,zpos+-19.5,3.2)
     
     //RECUADROS
-    //loadRecuadros()
+    loadRecuadros()
 
     //LABORATORIO
     laboratorio()
     loadShower()
     loadCloset()
+    loadLabScene(xpos+0,ypos+0,zpos+0)
+    loadRadio()
 
     //ESCRITORIOS
     loadEscritorios()
@@ -178,13 +188,8 @@ function display() {
     //ITEMS SOMBRE MESA Y OTROS
     loadLaptop(0,0,0)
 
-    //controles para mover objetos (Deshabilitar Orbit Controls )
-    //enableDragControls()
-
     //Sector PRUEBAS
-    loadLabScene(xpos+0,ypos+0,zpos+0)
-    //cuboPrueba()
-    loadRadio()
+
     //LOOP DE RENDERIZADO
     animate()
 }
@@ -198,18 +203,23 @@ function cuboPrueba() {
     scene.add(cuboObjeto)
 }
 function loadRadio(){
-    const sound=new THREE.PositionalAudio(listener)
+    sound=new THREE.PositionalAudio(listener)
+    sound.setDirectionalCone(90,180,0.5)
     const audioLoader=new THREE.AudioLoader()
     audioLoader.load('/assets/sounds/RadioPortal.ogg',function(buffer){
         sound.setBuffer(buffer)
-        sound.setRefDistance(5)
+        sound.setRefDistance(2)
+        sound.setLoop(true)
         sound.play()
     })
+    sound.setMaxDistance(0.5)
+    sound.volume=1
     loadAssets.clearall()
     loadAssets.setResizeUnic(1)
-    loadAssets.setRotation(0,Math.PI*0.9,0)
-    loadAssets.setCords(30,41,197)
+    loadAssets.setRotation(0,Math.PI*0.8,0)
+    loadAssets.setCords(30,40,195)
     loadAssets.RadioPortal(scene,sound)
+    //sound.add(new PositionalAudioHelper(sound,200))
 }
 function loadOficinistas(){
     loadAssets.clearall()
@@ -258,12 +268,12 @@ function loadOficinistas(){
 
     loadAssets.setRotation(0,Math.PI*0.3,0)
     loadAssets.setResizeUnic(0.5)
-    loadAssets.setCords(-172,23,130)
+    loadAssets.setCords(-172,24,130)
     loadAssets.CuboDeCompania(scene)
 
     loadAssets.setRotation(0,Math.PI*0.3,0)
     loadAssets.setResizeUnic(0.2)
-    loadAssets.setCords(-142,25,170)
+    loadAssets.setCords(-142,27,170)
     loadAssets.GladosPotato(scene)
 
     loadAssets.setRotation(0,Math.PI*0.3,0)
@@ -282,10 +292,10 @@ function loadOficinistas(){
     loadAssets.setCords(-58,7,-57)
     loadAssets.cientificoSentado(scene,4)
 
-    // loadAssets.setRotation(0,Math.PI*1.0,0)
-    // loadAssets.setResizeUnic(0.1)
-    // loadAssets.setCords(-79,27,-68)
-    // loadAssets.ModuloLunar(scene)
+    loadAssets.setRotation(0,Math.PI*0.5,0)
+    loadAssets.setResizeUnic(0.05)
+    loadAssets.setCords(-79,27,-68)
+    loadAssets.Cohete(scene)
 
     loadAssets.setRotation(Math.PI*0.2,Math.PI*1.0,0)
     loadAssets.setResizeUnic(0.4)
@@ -306,8 +316,10 @@ function loadOficinistas(){
     loadAssets.setCords(-56,2,-148)
     loadAssets.SillaOficina2(scene)
     loadAssets.setResizeUnic(0.9)
-    loadAssets.setCords(-58,7,-147)
+    loadAssets.setRotation(Math.PI*-0.1,Math.PI*-0.25,0)
+    loadAssets.setCords(-58,9,-147)
     loadAssets.cientificoSentado(scene,8)
+    loadAssets.setRotation(0,Math.PI*-0.25,0)
     loadAssets.setResizeUnic(1.0)
     loadPosterAlter(-69.8,38.2,-130.8,'Img_NoInternet.jpg',13.5,14)
 
@@ -364,6 +376,7 @@ function loadShower() {
     vidrioA.receiveShadow=true 
     vidrioA.castShadow=true
     scene.add(vidrioA)
+    loadAssets.objects.push(vidrioA)
 
     const vidrioB=new THREE.Mesh(
         new THREE.BoxGeometry(20,56,2),
@@ -373,6 +386,7 @@ function loadShower() {
     vidrioB.receiveShadow=true 
     vidrioB.castShadow=true
     scene.add(vidrioB)
+    loadAssets.objects.push(vidrioB)
 
     const vidrioC=new THREE.Mesh(
         new THREE.BoxGeometry(2,56,34),
@@ -382,6 +396,7 @@ function loadShower() {
     vidrioC.receiveShadow=true 
     vidrioC.castShadow=true
     scene.add(vidrioC)
+    loadAssets.objects.push(vidrioC)
 }
 function loadCloset() {
     loadAssets.clearall()
@@ -410,12 +425,14 @@ function loadEdificio() {
     scene.add(edificio)
 }
 function loadPerimetro() {
+    //altura=3.78
+    const altura=2.7
     const colorP= 0xf2f3e0
     const miniParedA=new THREE.Mesh(
         new THREE.BoxGeometry(400,3,4),
         new THREE.MeshToonMaterial({color: colorP})
     )
-    miniParedA.position.set(0,3.78,202)
+    miniParedA.position.set(0,altura,202)
     miniParedA.receiveShadow=true
     scene.add(miniParedA)
 
@@ -425,15 +442,15 @@ function loadPerimetro() {
     )
     miniParedB.receiveShadow=true
     //miniParedB.rotation.set(0,Math.PI*0.5,0)
-    miniParedB.position.set(202,3.78,0.5)
+    miniParedB.position.set(202,altura,0.5)
     scene.add(miniParedB)
 
     const miniParedC=miniParedA.clone()
-    miniParedC.position.set(0,3.78,-201)
+    miniParedC.position.set(0,altura,-201)
     scene.add(miniParedC)
 
     const miniParedD=miniParedB.clone()
-    miniParedD.position.set(-202,3.78,0)
+    miniParedD.position.set(-202,altura,0)
     scene.add(miniParedD)
 }
 function loadEscritorios() {
@@ -465,39 +482,60 @@ function loadEscritorios() {
     loadAssets.setCords(-170,2, 165)
     loadAssets.EscritorioOficina(scene,5)
 }
-function paredShadows1(cx,cy,cz,cr) {
-    const material=new THREE.MeshToonMaterial({color: 0xffffff})
-    const cubo=new THREE.BoxGeometry(0.5,70,198)
-    const cuboObjeto=new THREE.Mesh(cubo,material)
-    cuboObjeto.position.set(cx,cy,cz)
-    cuboObjeto.rotation.set(0,cr,0)
-    cuboObjeto.receiveShadow=true;
-    cuboObjeto.castShadow=false;
-    scene.add(cuboObjeto)
-}
 function loadRecuadros() {
-    loadCuadro(42*1,45,-34,25,35,Math.PI*0.0,'CuboCompPoster2.jpg')
-    loadCuadro(42*2,45,-34,25,35,Math.PI*0.0,'CakeLiePoster3.gif')
-    loadCuadro(42*3,45,-34,25,35,Math.PI*0.0,'CaveJohnsonPoster4.jpg')
     
-    loadCuadro(90,45,-40,100,40,Math.PI*1.0,'AperturePoster1.jpg')
+    loadCuadro(120,40,-40,100,40,Math.PI*1.0,'AperturePoster1.jpg')
 }
 function loadCuadro(coordx,coordy,coordz,cwidth,cheight,rotate,img) {
-    loadAssets.clearall()
-    loadAssets.setResize(cwidth/10,1.0,cheight/10)
-    loadAssets.setRotation(Math.PI*0.5,0,rotate)
-    loadAssets.setCords(coordx,coordy,coordz)
-    loadAssets.Marco(scene)
+    // loadAssets.clearall()
+    // loadAssets.setResize(cwidth/10,1.0,cheight/10)
+    // loadAssets.setRotation(Math.PI*0.5,0,rotate)
+    // loadAssets.setCords(coordx,coordy,coordz)
+    // loadAssets.Marco(scene)
+    loadPoster(coordx,coordy,coordz,rotate,img,cwidth,cheight)
+    let marco=new THREE.Group()
 
-    loadPoster(coordx,coordy,coordz,-rotate,img,cwidth-(cwidth/10),cheight-(cheight/10))
+    const maderaColor= 0x5f3f28
+    let lado1=new THREE.Mesh(
+        new THREE.BoxGeometry(1,cheight,1.5),
+        new THREE.MeshPhongMaterial({color: maderaColor})
+    )
+    lado1.receiveShadow=true
+    lado1.castShadow=true
+    let lado2=lado1.clone()
+    lado1.position.set(cwidth/2,0,0)
+    lado2.position.set(-cwidth/2,0,0)
     
+    let lado3=new THREE.Mesh(
+        new THREE.BoxGeometry(cwidth+1,1,1.5),
+        new THREE.MeshPhongMaterial({color: maderaColor})
+    )
+    lado3.receiveShadow=true
+    lado3.castShadow=true
+    let lado4=lado3.clone()
+    lado3.position.set(0,cheight/2,0)
+    lado4.position.set(0,-cheight/2,0)
+
+    marco.add(lado1)
+    marco.add(lado2)
+    marco.add(lado3)
+    marco.add(lado4)
+    
+
     const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xd6f2fc, transparent:true, opacity: 0.2})
-    const rectangulo=new THREE.BoxGeometry(cwidth-(cwidth/10),cheight-(cheight/10),0.5)
+    const rectangulo=new THREE.BoxGeometry(cwidth,cheight,0.5)
     const ventana=new THREE.Mesh(rectangulo,vidrioMaterial)
-    ventana.position.set(coordx,coordy,coordz)
-    ventana.rotation.set(0,rotate,0)
+    ventana.position.set(0,0,0)
+    //ventana.rotation.set(0,rotate,0)
     ventana.receiveShadow=true
-    scene.add(ventana)
+    ventana.castShadow=true
+    marco.add(ventana)
+    marco.rotateY(rotate)
+    marco.position.set(coordx,coordy,coordz)
+    scene.add(marco)
+    loadAssets.objects.push(marco)
+
+    
 }
 function loadLaptop(coordx,coordy,coordz) {
     loadAssets.clearall()
@@ -515,10 +553,11 @@ function loadPoster(coordx,coordy,coordz,rotate,img,pAncho,pAlto) {
     }
     const poster=new THREE.Mesh(planePoster,imgPoster)
     poster.position.set(coordx,coordy,coordz)
-    poster.rotation.set(0,rotate,0)
+    poster.rotateY(rotate)
     poster.receiveShadow=true
     poster.castShadow=true
     scene.add(poster)
+    loadAssets.objects.push(poster)
 }
 function loadPosterAlter(coordx,coordy,coordz,img,pAncho,pAlto) {
 
@@ -534,6 +573,7 @@ function loadPosterAlter(coordx,coordy,coordz,img,pAncho,pAlto) {
     poster.receiveShadow=true
     poster.castShadow=true
     scene.add(poster)
+    loadAssets.objects.push(poster)
 }
 function loadVentana(coordx,coordy,coordz) {
     const vidrioMaterial=new THREE.MeshLambertMaterial({color: 0xa4e7ff, transparent:true, opacity: 0.5})
@@ -543,42 +583,44 @@ function loadVentana(coordx,coordy,coordz) {
     ventana.position.set(87,42.3,42)
     ventana.receiveShadow=true
     scene.add(ventana)
-    
+    loadAssets.objects.push(ventana)
 }
 function loadLabScene(coordx,coordy,coordz) {
+    let temp=15
     loadAssets.clearall()
     loadAssets.setResizeUnic(0.9)
 
     //Cientificos
     loadAssets.setRotation(0,Math.PI*0.5,0)
-    loadAssets.setCords(10,0,140)
+    loadAssets.setCords(10,0,140-temp)
     loadAssets.cientifico(scene,3)
 
     loadAssets.setRotation(0,Math.PI*0.0,0)
-    loadAssets.setCords(140,0,120)
+    loadAssets.setCords(140,0,120-temp)
     loadAssets.cientifico(scene,4)
 
     //Pera, sí una pera
     loadAssets.setResizeUnic(1.5)
     loadAssets.setRotation(0,Math.PI*0.5,0)
-    loadAssets.setCords(-20,43,126)
+    loadAssets.setCords(-20,43,126-temp)
     loadAssets.Pera(scene)
     
     //Torreta
     loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.setResize(0.35,0.35,0.35)
-    loadAssets.setCords(140,coordy+0,140)
+    loadAssets.setCords(140,coordy+0,140-temp)
     loadAssets.TorretaPortal(scene) 
 
     //Laser, sí los laseres mejoran todo :D
     const points=[]
-    points.push(new THREE.Vector3(6,46,137))
-    points.push(new THREE.Vector3(140,22,140))
+    points.push(new THREE.Vector3(6,46,137-temp))
+    points.push(new THREE.Vector3(140,22,140-temp))
     const line = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(points),
         new THREE.LineBasicMaterial({color:0xb20000,linewidth:4})
     )
     scene.add(line)
+    loadAssets.objects.push(line)
 }
 function loadParedes(coordx,coordy,coordz) {
     loadAssets.clearall()
@@ -701,8 +743,9 @@ function loadVideo(coordx,coordy,coordz,psize) {
     movieScreen.position.set(coordx,coordy,coordz)
     movieScreen.rotateY(Math.PI*0.5)
     scene.add(movieScreen)
+    loadAssets.objects.push(movieScreen)
     video.currentTime=1.1
-
+    video.volume=0.4
 }
 function loadSillas(coordx,coordy,coordz){
     loadAssets.setCords(0+coordx,coordy+2,coordz+-25)
@@ -972,7 +1015,7 @@ function createLight(coordx,coordy,coordz){
     light9.position.set(72,70,3)
     light9.lookAt(72,0,3)
     scene.add(light9)
-    scene.add(new RectAreaLightHelper(light9))
+    //scene.add(new RectAreaLightHelper(light9))
 
 
     //lightHelper=new THREE.PointLightHelper(light6)
@@ -1043,7 +1086,6 @@ function animate(){
     //camerShadowHelper.update()
     renderer.render(scene, camera)
 }
-
 function enableOrbitControls(){
     orbitcontrols = new OrbitControls(camera,renderer.domElement) 
     orbitcontrols.maxPolarAngle=Math.PI*0.45
@@ -1052,14 +1094,31 @@ function enableOrbitControls(){
 }
 function enableDragControls() {
     drangControls=new DragControls(loadAssets.objects,camera,renderer.domElement)
+    drangControls.enabled=false
+    drangControls.transformGroup=false
 }
 function addGui() {
+    const controlsFolder=gui.addFolder("Controls")
+    controlsFolder.add(controlparams,"Camera_Mov",true).onChange(function(){
+        orbitcontrols.enablePan=controlparams.Camera_Mov
+    })
+    controlsFolder.add(controlparams,"Camera_Rot",true).onChange(function(){
+        orbitcontrols.enableRotate=controlparams.Camera_Rot
+    })
+    controlsFolder.add(controlparams,"Elements_Mov",false).onChange(function(){
+        drangControls.enabled=controlparams.Elements_Mov
+    })
+    controlsFolder.open()
     const videoFolder = gui.addFolder("Video")
     videoFolder.add(vidparams,"Play")
     videoFolder.add(vidparams,"Pause")
     videoFolder.add(vidparams,"Stop")
     videoFolder.add(vidparams,"Replay")
-    videoFolder.open()
+    videoFolder.add(vidparams,"Volumen",0,100).step(1).onChange(function(){
+        video.volume=vidparams.Volumen/100
+    })
+    videoFolder.close()
+    
 }
 function canvasResize(){
     camera.aspect = window.innerWidth / window.innerHeight 
@@ -1068,19 +1127,23 @@ function canvasResize(){
     renderer.render(scene, camera)
 }
 function playvideo() {
+    sound.pause()
     video.play()
     status=true
 }
 function stopvideo() {
     video.pause()
+    sound.play()
     status=false
     video.currentTime=1.1
 }
 function pausevideo() {
+    sound.play()
     video.pause()
     status=false
 }
 function replayvideo() {
+    sound.pause()
     video.pause()
     video.currentTime=1.1
     video.play()
@@ -1089,17 +1152,13 @@ function replayvideo() {
 function update(){
     if(keyboard.pressed("space")){
         if(status==true){
-            video.pause()
-            status=false
+            playvideo()
         }else{
-            video.play()
-            status=true
+            pausevideo()
         }
     }
     if(keyboard.pressed("s")){
-        video.pause()
-        video.currentTime=1.1
-        status=false
+        stopvideo()
     }   
         
 }
