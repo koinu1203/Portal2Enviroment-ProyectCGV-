@@ -483,7 +483,19 @@ function loadEscritorios() {
     loadAssets.EscritorioOficina(scene,5)
 }
 function loadRecuadros() {
-    
+    //sala de oficinas 
+    //derecha
+    loadCuadro(-2,40,170,38,30,Math.PI*-0.5,'ApertureLaboratories.jpg')
+    loadCuadro(-2,40,120,38,30,Math.PI*-0.5,'GladosPotato.webp')
+    loadCuadro(-2,40,70,38,30,Math.PI*-0.5,'TheCake.jpg')
+    //izquierda
+    loadCuadro(-2,40,-70,38,30,Math.PI*-0.5,'CuboCompania.jpg')
+    loadCuadro(-2,40,-120,38,30,Math.PI*-0.5,'Wheatley1.jpg')
+    loadCuadro(-2,40,-170,38,30,Math.PI*-0.5,'Torreta.jpg')
+
+    //lab
+    loadCuadro(5,40,80,30,30,Math.PI*0.5,'DoScience.jpg')
+    //sala de proyecciones 
     loadCuadro(120,40,-40,100,40,Math.PI*1.0,'AperturePoster1.jpg')
 }
 function loadCuadro(coordx,coordy,coordz,cwidth,cheight,rotate,img) {
