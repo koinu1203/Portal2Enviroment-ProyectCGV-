@@ -109,7 +109,6 @@ function cargar(ruta, scene, px,py,pz,prx,pry,prz,psx,psy,psz,shadow,sound=undef
         gltf.scene.rotation.set(prx,pry,prz)
         gltf.scene.scale.set(psx,psy,psz)
         if(sound!=undefined){
-            console.log(sound)
             gltf.scene.add(sound)
         }
         scene.add(gltf.scene)
@@ -185,8 +184,8 @@ export function TorretaPortal(scene) {
 export function CuboDeCompania(scene) {
     cargar(__dirModels+'CuboDeCompañia.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
-export function PlantaModel1(scene) {
-    cargar(__dirModels+'PlantaModel1.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+export function Planta(scene,num) {
+    cargar(__dirModels+'Planta'+num+'.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }
 export function Cake(scene) {
     cargar(__dirModels+'cake.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
@@ -258,4 +257,10 @@ export function RadioPortal(scene,sound) {
 }
 export function Cohete(scene) {
     cargar(__dirModels+'Cohete.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function BlocNote(scene) {
+    cargar(__dirModels+'BlocNote.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
+}
+export function Calculadora(scene) {
+    cargar(__dirModels+'Calculadora.glb',scene,x,y,z,rx,ry,rz,sx,sy,sz,shadow)
 }

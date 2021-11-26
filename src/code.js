@@ -65,6 +65,8 @@ let status
 //Audio Vars
 let listener
 let sound
+let sound2
+let sound3
 
 //Stats (FPS/MS)
 let stats
@@ -187,8 +189,10 @@ function display() {
 
     //ITEMS SOMBRE MESA Y OTROS
     loadLaptop(0,0,0)
+    loadMiscProyector()
 
     //Sector PRUEBAS
+    loadAudioGeneral()
 
     //LOOP DE RENDERIZADO
     animate()
@@ -204,22 +208,70 @@ function cuboPrueba() {
 }
 function loadRadio(){
     sound=new THREE.PositionalAudio(listener)
-    sound.setDirectionalCone(90,180,0.5)
+    
     const audioLoader=new THREE.AudioLoader()
+    // RadioPortal.ogg
     audioLoader.load('/assets/sounds/RadioPortal.ogg',function(buffer){
         sound.setBuffer(buffer)
-        sound.setRefDistance(2)
+        sound.setRefDistance(150) //Distancia a la que el volumen comienza a bajar
+        sound.setRolloffFactor(9) 
+        sound.setDistanceModel('exponential') //El mejor modo
         sound.setLoop(true)
+        sound.setDirectionalCone(90,120,0.1)
+        //sound.add(new PositionalAudioHelper(sound,150))
         sound.play()
     })
-    sound.setMaxDistance(0.5)
-    sound.volume=1
+    sound.setVolume(0.1)
     loadAssets.clearall()
     loadAssets.setResizeUnic(1)
     loadAssets.setRotation(0,Math.PI*0.8,0)
     loadAssets.setCords(30,40,195)
     loadAssets.RadioPortal(scene,sound)
-    //sound.add(new PositionalAudioHelper(sound,200))
+    
+}
+function loadAudioGeneral(){
+    let __dirAudio='/assets/sounds/OfficeAmbientSound2.ogg'
+    sound2=new THREE.PositionalAudio(listener)
+    const audioLoad = new THREE.AudioLoader()
+    audioLoad.load(__dirAudio,function(buffer){
+        sound2.setBuffer(buffer)
+        sound2.setRefDistance(80) //Distancia a la que el volumen comienza a bajar
+        sound2.setRolloffFactor(4) 
+        sound2.setDistanceModel('exponential') //El mejor modo
+        sound2.setLoop(true)
+        sound2.setDirectionalCone(340,360,0.1)
+        //sound2.add(new PositionalAudioHelper(sound2,80))
+        sound2.play()
+    })
+    sound2.setVolume(0.8)
+    //{color: 0xa1c8d6, transparent:true, opacity: 0.4}
+    const mate=new THREE.MeshPhongMaterial({color: 0xa1c8d6, transparent:true, opacity: 0.0})
+    const cub1=new THREE.Mesh(
+        new THREE.BoxGeometry(10,10,10),
+        mate
+    )
+    cub1.position.set(-100,20,-100)
+    scene.add(cub1)
+    cub1.add(sound2)
+    sound3=new THREE.PositionalAudio(listener)
+    audioLoad.load(__dirAudio,function(buffer){
+        sound3.setBuffer(buffer)
+        sound3.setRefDistance(80) //Distancia a la que el volumen comienza a bajar
+        sound3.setRolloffFactor(4) 
+        sound3.setDistanceModel('exponential') //El mejor modo
+        sound3.setLoop(true)
+        sound3.setDirectionalCone(340,360,0.1)
+        //sound3.add(new PositionalAudioHelper(sound3,80))
+        sound3.play()
+    })
+    sound3.setVolume(0.8)
+    let cub2=new THREE.Mesh(
+        new THREE.BoxGeometry(10,10,10),
+        mate
+    )
+    cub2.position.set(-100,20,100)
+    scene.add(cub2)
+    cub2.add(sound3)
 }
 function loadOficinistas(){
     loadAssets.clearall()
@@ -339,6 +391,31 @@ function loadOficinistas(){
     loadAssets.setResizeUnic(1.0)
 
     loadPosterAlter(-159.8,38.2,-130.8,'Img_PortalCamera.jpg',13.5,14)
+}
+function loadMiscProyector(){
+    loadAssets.clearall
+    loadAssets.clearall()
+    loadAssets.setResize(0.3,0.5,0.3)
+
+    loadAssets.setRotation(0,Math.PI*0,0)
+    loadAssets.setCords(14,2,-175)
+    loadAssets.Planta(scene,1)
+
+    loadAssets.setRotation(0,Math.PI*1.0,0)
+    loadAssets.setCords(12,2,-65)
+    loadAssets.Planta(scene,1)
+
+    //BLOCNOTES
+    loadAssets.setResizeUnic(0.10)
+    loadAssets.setRotation(0,Math.PI*0.4,0)
+    loadAssets.setCords(95,22,-125)
+    loadAssets.BlocNote(scene)
+
+    //Calculadora
+    loadAssets.setResizeUnic(0.15)
+    loadAssets.setRotation(0,Math.PI*-0.45,0)
+    loadAssets.setCords(105,22,-125)
+    loadAssets.Calculadora(scene)
 }
 function loadAsensor() {
     loadAssets.clearall()
@@ -650,9 +727,11 @@ function loadParedes(coordx,coordy,coordz) {
     loadAssets.setCords(coordx-112.5,coordy+0,coordz+69.5)
     loadAssets.PuertaModel1(scene)
 
-    loadAssets.setRotation(0,Math.PI*0.0,0)
-    loadAssets.setCords(coordx-71,coordy+0,coordz+132)
+    loadAssets.setResize(1,1.15,1)
+    loadAssets.setRotation(0,Math.PI*-0.2,0)
+    loadAssets.setCords(32,coordy+0,42)
     loadAssets.PuertaModel1(scene)
+    loadAssets.setResize(1,1.2,1)
 
 
     //paredes
@@ -877,10 +956,15 @@ function loadCientificos(coordx,coordy,coordz) {
     loadAssets.setRotation(0,Math.PI*-0.5,0)
     loadAssets.cientifico(scene,6)
 
-    loadAssets.setCords(98,0,90)
+    loadAssets.setCords(98,2,90)
     //loadAssets.setResize(0.4,0.45,0.4)
     loadAssets.setRotation(0,Math.PI*-1.0,0)
     loadAssets.cientifico(scene,7)
+
+    loadAssets.setCords(29,2,34)
+    //loadAssets.setResize(0.4,0.45,0.4)
+    loadAssets.setRotation(0,Math.PI*0.1,0)
+    loadAssets.cientifico(scene,4)
 
 }
 function loadCientificoSentado( coordx, coordy, coordz) {
@@ -1139,23 +1223,19 @@ function canvasResize(){
     renderer.render(scene, camera)
 }
 function playvideo() {
-    sound.pause()
     video.play()
     status=true
 }
 function stopvideo() {
     video.pause()
-    sound.play()
     status=false
     video.currentTime=1.1
 }
 function pausevideo() {
-    sound.play()
     video.pause()
     status=false
 }
 function replayvideo() {
-    sound.pause()
     video.pause()
     video.currentTime=1.1
     video.play()
