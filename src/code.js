@@ -243,7 +243,7 @@ function loadAudioGeneral(){
         //sound2.add(new PositionalAudioHelper(sound2,80))
         sound2.play()
     })
-    sound2.setVolume(0.8)
+    sound2.setVolume(0.6)
     //{color: 0xa1c8d6, transparent:true, opacity: 0.4}
     const mate=new THREE.MeshPhongMaterial({color: 0xa1c8d6, transparent:true, opacity: 0.0})
     const cub1=new THREE.Mesh(
@@ -264,7 +264,7 @@ function loadAudioGeneral(){
         //sound3.add(new PositionalAudioHelper(sound3,80))
         sound3.play()
     })
-    sound3.setVolume(0.8)
+    sound3.setVolume(0.6)
     let cub2=new THREE.Mesh(
         new THREE.BoxGeometry(10,10,10),
         mate
