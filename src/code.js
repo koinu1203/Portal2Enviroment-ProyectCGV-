@@ -54,6 +54,18 @@ let light6 //RecAreLight
 let light7 //RecAreLight
 let light8 //RecAreLight
 let light9 //RecAreLight
+let light10
+let light11
+let light12
+let light13
+let light14
+let light15
+let light16
+let light17
+let light18
+let light19
+let light20
+let light21
 let lightHelper //light helper
 let camerShadowHelper
 
@@ -92,7 +104,7 @@ function init() {
     renderer.shadowMap.enabled=true
     //renderer.physicallyCorrectLights=true
     //renderer.toneMapping=THREE.CineonToneMapping
-    renderer.shadowMap.type=THREE.VSMShadowMap
+    renderer.shadowMap.type=THREE.PCFShadowMap
     document.body.appendChild(renderer.domElement)
     
     window.addEventListener('resize', canvasResize)
@@ -235,12 +247,12 @@ function loadAudioGeneral(){
     const audioLoad = new THREE.AudioLoader()
     audioLoad.load(__dirAudio,function(buffer){
         sound2.setBuffer(buffer)
-        sound2.setRefDistance(80) //Distancia a la que el volumen comienza a bajar
+        sound2.setRefDistance(120) //Distancia a la que el volumen comienza a bajar
         sound2.setRolloffFactor(4) 
         sound2.setDistanceModel('exponential') //El mejor modo
         sound2.setLoop(true)
         sound2.setDirectionalCone(340,360,0.1)
-        //sound2.add(new PositionalAudioHelper(sound2,80))
+        //sound2.add(new PositionalAudioHelper(sound2,120))
         sound2.play()
     })
     sound2.setVolume(0.6)
@@ -250,18 +262,18 @@ function loadAudioGeneral(){
         new THREE.BoxGeometry(10,10,10),
         mate
     )
-    cub1.position.set(-100,20,-100)
+    cub1.position.set(-130,40,-100)
     scene.add(cub1)
     cub1.add(sound2)
     sound3=new THREE.PositionalAudio(listener)
     audioLoad.load(__dirAudio,function(buffer){
         sound3.setBuffer(buffer)
-        sound3.setRefDistance(80) //Distancia a la que el volumen comienza a bajar
+        sound3.setRefDistance(120) //Distancia a la que el volumen comienza a bajar
         sound3.setRolloffFactor(4) 
         sound3.setDistanceModel('exponential') //El mejor modo
         sound3.setLoop(true)
         sound3.setDirectionalCone(340,360,0.1)
-        //sound3.add(new PositionalAudioHelper(sound3,80))
+        //sound3.add(new PositionalAudioHelper(sound3,120))
         sound3.play()
     })
     sound3.setVolume(0.6)
@@ -269,7 +281,7 @@ function loadAudioGeneral(){
         new THREE.BoxGeometry(10,10,10),
         mate
     )
-    cub2.position.set(-100,20,100)
+    cub2.position.set(-130,40,100)
     scene.add(cub2)
     cub2.add(sound3)
 }
@@ -563,12 +575,11 @@ function loadRecuadros() {
     //sala de oficinas 
     //derecha
     loadCuadro(-2,40,170,38,30,Math.PI*-0.5,'ApertureLaboratories.jpg')
-    loadCuadro(-2,40,120,38,30,Math.PI*-0.5,'GladosPotato.webp')
+    loadCuadro(-2,40,120,38,30,Math.PI*-0.5,'PortalPoster.jpg')
     loadCuadro(-2,40,70,38,30,Math.PI*-0.5,'TheCake.jpg')
     //izquierda
-    loadCuadro(-2,40,-70,38,30,Math.PI*-0.5,'CuboCompania.jpg')
-    loadCuadro(-2,40,-120,38,30,Math.PI*-0.5,'Wheatley1.jpg')
-    loadCuadro(-2,40,-170,38,30,Math.PI*-0.5,'Torreta.jpg')
+    loadCuadro(-2,40,-70,38,30,Math.PI*-0.5,'GladosPotato.webp')
+    loadCuadro(-2,40,-140,60,30,Math.PI*-0.5,'GladosPoster.jpg')
 
     //lab
     loadCuadro(5,40,80,30,30,Math.PI*0.5,'DoScience.jpg')
@@ -1095,7 +1106,7 @@ function createLight(coordx,coordy,coordz){
     scene.add(light6)
     //scene.add(new RectAreaLightHelper(light6))
 
-    light7=new THREE.RectAreaLight(0xfeffca,0.8,198,400)
+    light7=new THREE.RectAreaLight(0xfeffca,0.7,198,400)
     light7.position.set(-100,70,0)
     light7.lookAt(-100,0,0)
     scene.add(light7)
@@ -1107,20 +1118,136 @@ function createLight(coordx,coordy,coordz){
     scene.add(light8)
     //scene.add(new RectAreaLightHelper(light8))
     
-    light9=new THREE.RectAreaLight(0xfeffca,0.8,137,74)
+    light9=new THREE.RectAreaLight(0xfeffca,0.7,137,74)
     light9.position.set(72,70,3)
     light9.lookAt(72,0,3)
     scene.add(light9)
     //scene.add(new RectAreaLightHelper(light9))
 
+    const distancel10 = 120.0
+    const anglel10= Math.PI *0.3
+    const penumbral10=0.5
+    const decayl10=1.0 
+    light10=new THREE.SpotLight(
+        0xfefdec,
+        0.5,
+        distancel10,
+        anglel10,
+        penumbral10,
+        decayl10
+    )
+    light10.position.set(-150,68,-150)
+    light10.target.position.set(-150,0,-150)
 
-    //lightHelper=new THREE.PointLightHelper(light6)
+    light10.castShadow=true
+    light10.shadow.mapSize.width=100
+    light10.shadow.mapSize.height=100
+    light10.shadow.camera.near=10
+    light10.shadow.camera.far=120
+    
+    scene.add(light10)
+    scene.add(light10.target)
+    
+
+    light11=new THREE.SpotLight()
+    light11.copy(light10)
+    light11.position.set(-50,68,-50)
+    light11.target.position.set(-50,0,-50)
+    scene.add(light11)
+    scene.add(light11.target)
+
+    light12=new THREE.SpotLight()
+    light12.copy(light10)
+    light12.position.set(-150,68,-50)
+    light12.target.position.set(-150,0,-50)
+    scene.add(light12)
+    scene.add(light12.target)
+
+    light13=new THREE.SpotLight()
+    light13.copy(light10)
+    light13.position.set(-50,68,-150)
+    light13.target.position.set(-50,0,-150)
+    scene.add(light13)
+    scene.add(light13.target)
+
+    light14=new THREE.SpotLight()
+    light14.copy(light10)
+    light14.position.set(-150,68,150)
+    light14.target.position.set(-150,0,150)
+    scene.add(light14)
+    scene.add(light14.target)
+
+    light15=new THREE.SpotLight()
+    light15.copy(light10)
+    light15.position.set(-50,68,50)
+    light15.target.position.set(-50,0,50)
+    scene.add(light15)
+    scene.add(light15.target)
+
+    light16=new THREE.SpotLight()
+    light16.copy(light10)
+    light16.position.set(-50,68,150)
+    light16.target.position.set(-50,0,150)
+    scene.add(light16)
+    scene.add(light16.target)
+
+    light17=new THREE.SpotLight()
+    light17.copy(light10)
+    light17.position.set(-150,68,50)
+    light17.target.position.set(-150,0,50)
+    scene.add(light17)
+    scene.add(light17.target)
+
+    light18=new THREE.SpotLight()
+    light18.copy(light10)
+    light18.angle=Math.PI *0.3
+    light18.position.set(80,68,0)
+    light18.target.position.set(100,0,0)
+    scene.add(light18)
+    scene.add(light18.target)
+
+    light19=new THREE.SpotLight()
+    light19.copy(light10)
+    light19.intensity=0.1
+    light19.angle=Math.PI *0.1
+    light19.position.set(20,68,0)
+    light19.target.position.set(20,0,20)
+    scene.add(light19)
+    scene.add(light19.target)
+
+    light19=new THREE.SpotLight()
+    light19.copy(light10)
+    light19.angle=Math.PI *0.3
+    light19.position.set(20,68,0)
+    light19.target.position.set(20,0,20)
+    scene.add(light19)
+    scene.add(light19.target)
+
+    light20=new THREE.SpotLight()
+    light20.copy(light10)
+    light20.color.set(0xffffff)
+    light20.angle=Math.PI *0.3
+    light20.position.set(130,68,130)
+    light20.target.position.set(120,0,120)
+    scene.add(light20)
+    scene.add(light20.target)
+
+    light21=new THREE.SpotLight()
+    light21.copy(light10)
+    light21.color.set(0xffffff)
+    light21.angle=Math.PI *0.2
+    light21.position.set(40,68,130)
+    light21.target.position.set(10,0,120)
+    scene.add(light21)
+    scene.add(light21.target)
+
+    //lightHelper=new THREE.PointLightHelper(light10)
     //scene.add(lightHelper)
-    //lightHelper=new THREE.SpotLightHelper(light5)
-    // lightHelper=new THREE.SpotLightHelper(light3)
+    //lightHelper=new THREE.SpotLightHelper(light21)
+    //lightHelper=new THREE.SpotLightHelper(light3)
     //scene.add(lightHelper) 
     
-    //camerShadowHelper=new THREE.CameraHelper(light5.shadow.camera)
+    //camerShadowHelper=new THREE.CameraHelper(light21.shadow.camera)
     //scene.add(camerShadowHelper)
 }
 function skybox_Background() {
